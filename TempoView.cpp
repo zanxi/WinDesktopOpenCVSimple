@@ -28,11 +28,18 @@ BEGIN_MESSAGE_MAP(CTempoView, CView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
 	ON_WM_TIMER()
+	ON_WM_CREATE(&CTempoView::OnCreate)
 	ON_WM_ERASEBKGND()
 	ON_MESSAGE(WMU_SETFPS, OnSetfps)
 	ON_MESSAGE(WMU_SETFPS_START, OnSetfps)
 	ON_MESSAGE(WMU_SETFPS_STOP, OnSetfps)
 	
+	ON_BN_CLICKED(IDC_BUTTON1, OnBtn1Clicked_Vpered)		
+	ON_BN_CLICKED(IDC_BUTTON2, OnBtn1Clicked_Nazad)
+
+	ON_BN_CLICKED(IDC_BUTTON4, OnBtn1Clicked_Vpered_Jump)
+	ON_BN_CLICKED(IDC_BUTTON5, OnBtn1Clicked_Nazad_Jump)	
+
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
@@ -50,10 +57,92 @@ CTempoView::~CTempoView()
 		m_brush.DeleteObject();
 }
 
+int CTempoView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CView::OnCreate(lpCreateStruct) == -1)
+	{
+		return -1;
+	}
+
+	m_Btn_Nazad.Create(_T(" -- < ---"), BS_PUSHBUTTON,
+		CRect(50, 50, 280, 100), this, IDC_BUTTON2);
+	m_Btn_Nazad.ShowWindow(SW_SHOW);
+
+	m_Btn_vpered.Create(_T(" -- > ---"), BS_PUSHBUTTON,
+		CRect(50, 100, 280, 150), this, IDC_BUTTON1);
+	m_Btn_vpered.ShowWindow(SW_SHOW);
+
+	m_Edit_info_num_cadr.Create(BS_PUSHBUTTON,
+		CRect(50, 170, 280, 220), this, IDC_BUTTON3);	
+	m_Edit_info_num_cadr.ShowWindow(SW_SHOW);
+	m_Edit_info_num_cadr.SetWindowTextA(_T("cadr"));
+
+
+	m_Btn_Nazad_jump.Create(_T(" -- <<< ---"), BS_PUSHBUTTON,
+		CRect(50, 240, 280, 290), this, IDC_BUTTON5);
+	m_Btn_Nazad_jump.ShowWindow(SW_SHOW);
+
+	m_Btn_vpered_jump.Create(_T(" -- >>> ---"), BS_PUSHBUTTON,
+		CRect(50, 290, 280, 340), this, IDC_BUTTON4);
+	m_Btn_vpered_jump.ShowWindow(SW_SHOW);
+
+	
+
+	return 0;
+
+}
+
+void CTempoView::OnBtn1Clicked_Vpered_Jump()
+{
+	CTempoDoc* pDoc = GetDocument();
+	pDoc->ShowNextFrameVpered_Jump();
+	pDoc->UpdateAllViews(NULL);
+
+	m_Edit_info_num_cadr.SetWindowTextA(std::to_string(pDoc->numCadrs[pDoc->numcalccadrCount]).c_str());
+}
+
+void CTempoView::OnBtn1Clicked_Nazad_Jump()
+{
+	CTempoDoc* pDoc = GetDocument();
+	pDoc->ShowNextFrameNazad_Jump();
+	pDoc->UpdateAllViews(NULL);
+
+	m_Edit_info_num_cadr.SetWindowTextA(std::to_string(pDoc->numCadrs[pDoc->numcalccadrCount]).c_str());
+}
+
+void CTempoView::OnBtn1Clicked_Vpered()
+{
+	CTempoDoc* pDoc = GetDocument();
+	pDoc->ShowNextFrameVpered();
+	pDoc->UpdateAllViews(NULL);
+
+	m_Edit_info_num_cadr.SetWindowTextA(std::to_string(pDoc->cadrCount).c_str());
+
+	//m_redBlack = !m_redBlack;
+	//AfxMessageBox("Hi");
+}
+
+
+void CTempoView::OnBtn1Clicked_Nazad()
+{
+	CTempoDoc* pDoc = GetDocument();
+	pDoc->ShowNextFrameNazad();
+	pDoc->UpdateAllViews(NULL);
+
+	m_Edit_info_num_cadr.SetWindowTextA(std::to_string(pDoc->cadrCount).c_str());
+
+}
+
+
+
 BOOL CTempoView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
+
+	// Create a push button.
+	//c_Play.Create(_T("My button"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+//		CRect(10, 10, 100, 30), this, 1);
 
 	return CView::PreCreateWindow(cs);
 }
@@ -62,15 +151,22 @@ BOOL CTempoView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CTempoView::OnDraw(CDC* pDC)
 {
+	
+
 	CTempoDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if(NULL == pDoc || NULL == pDoc->m_pBmi)
 		return;
 
+
+
 	// TODO: add draw code for native data here
 
 	CRect rectClient;
 	GetClientRect(&rectClient);
+
+	//if (m_redBlack)pDC->FillSolidRect(rectClient, RGB(255,0,0));
+	//pDC->FillSolidRect(rectClient, RGB(255, 124, 0));
 
 	CDC memDC;
 	memDC.CreateCompatibleDC(pDC);

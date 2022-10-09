@@ -382,7 +382,7 @@ void CTempoDoc::SetupBitmapInfo(cv::Mat& mat)
 	pHeader->biBitCount			= 24;
 	m_pBmi->bmiHeader.biSizeImage = 0;
 
-	Bound(m_Mat);
+	//Bound(m_Mat);
 
 	//debugSquares(std::vector<std::vector<cv::Point>>
 	//{
@@ -454,6 +454,23 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	if ((std::string(lpszPathName).find(".dav") != std::string::npos))
 	{
 		m_VideoDav = new DAV(std::string(lpszPathName));
+		
+		numCadrs = {1,2, 3,4, 5,6, 21,46,47,48};
+
+		naborCadrs[1] = { cv::Point(584, 338), cv::Point(634, 378) };
+		naborCadrs[2] = { cv::Point(622,438), cv::Point(644,394) }; // Test_2.json
+		naborCadrs[21] = { cv::Point(339,4), cv::Point(651,149) }, // Test_21.json
+		naborCadrs[3] = { cv::Point(636,357), cv::Point(688,302) }; // Test_3.json
+		naborCadrs[4] = { cv::Point(684,339), cv::Point(753,266) }; // Test_4.json
+		naborCadrs[46] = { cv::Point(664,339), cv::Point(731,269) }, // Test_46.json
+		naborCadrs[47] = { cv::Point(736,210), cv::Point(826,305) }; // Test_47.json
+		naborCadrs[5] = { cv::Point(777,195), cv::Point(876,302) }; // Test_5.json
+		naborCadrs[6] = { cv::Point(1004,148), cv::Point(1024,31) }; // Test_6.json
+		naborCadrs[48] = { cv::Point(777, 195), cv::Point(876, 302) }; // Test_48.json
+
+
+
+		//Calccadr;
 
 		m_Mat = m_VideoDav->cadr(cadrCount);
 		SetupBitmapInfo(m_Mat);
@@ -494,7 +511,149 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	}
 
 	return TRUE;
+
 }
+
+
+
+
+void CTempoDoc::ShowNextFrameNazad()
+{
+
+	//if ((std::string(lpszPathName).find(".dav") != std::string::npos))
+	{
+		//return;
+		//if (cadrCount > 1)
+		{
+			m_Mat = m_VideoDav->cadr(cadrCount);			
+			
+			debugSquares(std::vector<std::vector<cv::Point>>
+			{
+				{cv::Point(584, 338), cv::Point(634, 378)}, // test_1.json
+				//{ cv::Point(622,438), cv::Point(644,394) }, // Test_2.json
+				//{ cv::Point(339,4), cv::Point(651,149) }, // Test_21.json
+				//{ cv::Point(636,357), cv::Point(688,302) }, // Test_3.json
+				//{ cv::Point(684,339), cv::Point(753,266) }, // Test_4.json
+				//{ cv::Point(664,339), cv::Point(731,269) }, // Test_46.json
+				//{ cv::Point(736,210), cv::Point(826,305) }, // Test_47.json
+				//{ cv::Point(777,195), cv::Point(876,302) }, // Test_5.json
+				//{ cv::Point(1004,148), cv::Point(1024,31) }, // Test_6.json
+				//{ cv::Point(), cv::Point() }, // Test_.json
+				//{ cv::Point(), cv::Point() }, // Test_.json
+
+				//{ cv::Point(777, 195), cv::Point(876, 302) }, // Test_48.json
+
+			}, m_Mat);
+
+			/**/
+
+			//Bound(m_Mat);
+
+			if (cadrCount > 1) cadrCount--;
+
+			/*debugSquares(std::vector<std::vector<cv::Point>>
+			{
+				{cv::Point(584, 338), cv::Point(634, 378)},
+				{cv::Point(777, 195), cv::Point(876, 302)}
+			}, m_Mat);*/
+
+			/*find_squares(m_Mat, std::vector<std::vector<cv::Point>>
+				{
+					{cv::Point(584, 338), cv::Point(634, 378)},
+				});*/
+
+				//debugSquares([[cv::Point(10, 10), cv::Point(10, 10)]], m_Mat);
+				// cadrCount = 1;
+				//SetupBitmapInfo(m_Mat);
+
+				//CView* pView = NULL;
+				//POSITION pos = GetFirstViewPosition();
+				//::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS_STOP, 0, 0);
+		}
+		
+		return;		
+	}	
+}
+
+void CTempoDoc::ShowNextFrameVpered_Jump()
+{
+	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);	
+	if (numcalccadrCount < numCadrs.size()-1)numcalccadrCount++;
+	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
+}
+
+void CTempoDoc::ShowNextFrameNazad_Jump()
+{
+	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);
+	if (numcalccadrCount >1)numcalccadrCount--;
+	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
+}
+
+
+void CTempoDoc::ShowNextFrameVpered()
+{
+
+	//if ((std::string(lpszPathName).find(".dav") != std::string::npos))
+	{
+		//return;
+		//if (cadrCount < m_VideoDav->CountKadr)
+		{
+			m_Mat = m_VideoDav->cadr(cadrCount);
+
+			
+			debugSquares(std::vector<std::vector<cv::Point>>
+			{
+				{cv::Point(584, 338), cv::Point(634, 378)}, // test_1.json
+				//{ cv::Point(622,438), cv::Point(644,394) }, // Test_2.json
+				//{ cv::Point(339,4), cv::Point(651,149) }, // Test_21.json
+				//{ cv::Point(636,357), cv::Point(688,302) }, // Test_3.json
+				//{ cv::Point(684,339), cv::Point(753,266) }, // Test_4.json
+				//{ cv::Point(664,339), cv::Point(731,269) }, // Test_46.json
+				//{ cv::Point(736,210), cv::Point(826,305) }, // Test_47.json
+				//{ cv::Point(777,195), cv::Point(876,302) }, // Test_5.json
+				//{ cv::Point(1004,148), cv::Point(1024,31) }, // Test_6.json
+				//{ cv::Point(), cv::Point() }, // Test_.json
+				//{ cv::Point(), cv::Point() }, // Test_.json
+
+				//{ cv::Point(777, 195), cv::Point(876, 302) }, // Test_48.json
+
+			}, m_Mat);
+
+			/**/
+
+			//Bound(m_Mat);
+
+
+
+			/*debugSquares(std::vector<std::vector<cv::Point>>
+			{
+				{cv::Point(584, 338), cv::Point(634, 378)},
+				{cv::Point(777, 195), cv::Point(876, 302)}
+			}, m_Mat);*/
+
+			/*find_squares(m_Mat, std::vector<std::vector<cv::Point>>
+				{
+					{cv::Point(584, 338), cv::Point(634, 378)},
+				});*/
+
+				//debugSquares([[cv::Point(10, 10), cv::Point(10, 10)]], m_Mat);
+				// cadrCount = 1;
+				//SetupBitmapInfo(m_Mat);
+
+				//CView* pView = NULL;
+				//POSITION pos = GetFirstViewPosition();
+				//::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS_STOP, 0, 0);
+		}
+		
+		if (cadrCount < m_VideoDav->CountKadr-1) cadrCount++;
+		return;
+	}
+}
+
+
+
+
+
 
 void CTempoDoc::ShowNextFrame()
 {
@@ -527,7 +686,7 @@ void CTempoDoc::ShowNextFrame()
 
 			/**/
 
-			Bound(m_Mat);
+			//Bound(m_Mat);
 
 
 

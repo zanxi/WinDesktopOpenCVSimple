@@ -4,6 +4,13 @@
 
 #pragma once
 
+constexpr UINT IDC_BUTTON1{ 1001 };
+constexpr UINT IDC_BUTTON2{ 1002 };
+
+constexpr UINT IDC_BUTTON4{ 1003 };
+constexpr UINT IDC_BUTTON5{ 1004 };
+
+constexpr UINT IDC_BUTTON3{ 1003 };
 
 class CTempoView : public CView
 {
@@ -41,6 +48,35 @@ public:
 protected:
 	CBrush m_brush;
 	double m_dZoomFactor;
+
+	CStatic	c_Status;
+	CSliderCtrl	c_Volume;
+	CButton	c_Stop;
+	CButton	c_Pause;
+	CButton	c_Play;
+	CSliderCtrl	c_Slider;
+	CStatic	c_Static;
+	int		m_PlayPauseStop;
+	int		m_Pos;
+
+private:
+	CButton m_Btn_vpered;
+	CButton m_Btn_Nazad;
+
+	CButton m_Btn_vpered_jump;
+	CButton m_Btn_Nazad_jump;
+
+	CEdit m_Edit_info_num_cadr;
+	bool m_redBlack{false};
+
+public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);	
+	void OnBtn1Clicked_Nazad();
+	void OnBtn1Clicked_Vpered();
+
+	void OnBtn1Clicked_Nazad_Jump();
+	void OnBtn1Clicked_Vpered_Jump();
+
 
 // Generated message map functions
 protected:

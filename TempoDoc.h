@@ -24,10 +24,14 @@ protected: // create from serialization only
 	CTempoDoc();
 	DECLARE_DYNCREATE(CTempoDoc)
 
-protected:
+public:
 	cv::VideoCapture m_Video;
 	    DAV * m_VideoDav;
 		int cadrCount=1;
+
+		std::map<int, std::vector<cv::Point>> naborCadrs;
+		std::vector<int> numCadrs;
+		int numcalccadrCount = 1;
 
 // Attributes
 public:
@@ -40,6 +44,12 @@ public:
 // Operations
 public:
 	void ShowNextFrame();
+	void ShowNextFrameNazad();
+	void ShowNextFrameVpered();
+
+	void ShowNextFrameNazad_Jump();
+	void ShowNextFrameVpered_Jump();
+
 	void ShowNextFrameDav();
 
 // Overrides
