@@ -1,0 +1,53 @@
+{
+    "requestType": "INVOCATION",
+    "hostName": "localhost",
+    "label": "bucky",
+    "serviceType": "DISCRETE",
+
+    "version": "4.5.7",
+    "flags": {},
+
+    "shapes": [{
+        "label": "ABC",
+        "points": [
+            ["para1", "value1"],
+            ["para2", "value2"],
+            ["para3", "value3"]
+        ],
+           "group_id ": null,
+            "shape_type": "rectangle",
+            "flags": {
+                "инструмент": "НС",
+                "тип НС": "YOLOv3",
+                "достоверность": 0.1773681640625,
+                "класс объекта": 47,
+                "веса НС": "config_train\\Signs_314_1024_new_train_100\\train_2021_12_10__21_49_03\\weights\\best.pt",
+                "классификатор": "дорожные знаки"
+            }
+    },
+    {
+        "label": "CBA",
+        "points": [
+            ["para1", "value1"],
+            ["para2", "value2"],
+            ["para3", "value3"]
+        ],
+         "group_id": null,
+            "shape_type": "rectangle",
+            "flags": {
+                "инструмент": "НС",
+                "тип НС": "YOLOv3",
+                "достоверность": 0.33349609375,
+                "класс объекта": 246,
+                "веса НС": "config_train\\Signs_314_1024_new_train_100\\train_2021_12_10__21_49_03\\weights\\best.pt",
+                "классификатор": "дорожные знаки"
+            }
+
+    }],
+    "dataTransferMode": null,
+    "imagePath": null,
+    "imageData": null,
+    "imageHeight": 768,
+    "imageWidth": 1024
+
+}

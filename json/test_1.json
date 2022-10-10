@@ -1,0 +1,32 @@
+        {
+            "version": "4.5.7",
+            "flags": {},
+            "shapes": [                                            
+                {
+                    "label": "",
+                    "points": [                                     
+                        [ 
+                            584, 
+                            338  
+                        ],
+                        [ 
+                            634,
+                            378
+                        ]
+                    ],
+                    "group_id": null,
+                    "shape_type": "rectangle",                      
+                    "flags": {
+                        "инструмент": "Нейронная сеть",
+                        "тип НС": "YOLOv3",
+                        "классификатор": "дорожные знаки",
+                        "класс объекта": 0
+                    }
+                }
+            ],
+            "imagePath": "",
+            "imageData": "None",
+            "imageHeight": 768,
+            "imageWidth": 1024
+        }
+

@@ -1,0 +1,24 @@
+{
+    "requestType": "INVOCATION",
+    "hostName": "localhost",
+    "serviceName": "bucky",
+    "serviceType": "DISCRETE",
+    "serviceParameters": "sampleData",
+    "servicesList": [{
+        "serviceName": "ABC",
+        "serviceParameters": {
+            "para1": "value1",
+            "para2": "value2",
+            "para3": "value3"
+        }
+    },
+    {
+        "serviceName": "CBA",
+        "serviceParameters": {
+            "para1": "value90",
+            "para2": "value",
+            "para3": "value"
+        }
+    }],
+    "dataTransferMode": null
+}

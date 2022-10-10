@@ -1,0 +1,16 @@
+{
+    "responseData": {
+        "id": "1", // node_children1
+        "results": [ // node_children2
+        { //array_children2
+            "GsearchResultClass": "GwebSearch",
+            "unescapedUrl": "http://en.wikipedia.org/wiki/Paris_Hilton",
+            "url": "http://en.wikipedia.org/wiki/Paris_Hilton",
+            "visibleUrl": "en.wikipedia.org",
+            "cacheUrl": "http://www.google.com/search?q\u003dcache:TwrPfhd22hYJ:en.wikipedia.org",
+            "title": "\u003cb\u003eParis Hilton\u003c/b\u003e - Wikipedia, the free encyclopedia",
+            "titleNoFormatting": "Paris Hilton - Wikipedia, the free encyclopedia",
+            "content": "blablae (born February 17, 1981) el, \u003cb\u003e...\u003c/b\u003e"
+        }]
+    }
+}
