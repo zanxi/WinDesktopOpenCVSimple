@@ -31,14 +31,16 @@ BEGIN_MESSAGE_MAP(CTempoView, CView)
 	ON_WM_CREATE(&CTempoView::OnCreate)
 	ON_WM_ERASEBKGND()
 	ON_MESSAGE(WMU_SETFPS, OnSetfps)
-	ON_MESSAGE(WMU_SETFPS_START, OnSetfps)
-	ON_MESSAGE(WMU_SETFPS_STOP, OnSetfps)
+	//ON_MESSAGE(WMU_SETFPS_START, OnSetfps)
+	ON_MESSAGE(WMU_SETFPS_STOP, OnSetfps_stop)
 	
 	ON_BN_CLICKED(IDC_BUTTON1, OnBtn1Clicked_Vpered)		
 	ON_BN_CLICKED(IDC_BUTTON2, OnBtn1Clicked_Nazad)
 
 	ON_BN_CLICKED(IDC_BUTTON4, OnBtn1Clicked_Vpered_Jump)
 	ON_BN_CLICKED(IDC_BUTTON5, OnBtn1Clicked_Nazad_Jump)	
+
+	ON_BN_CLICKED(IDC_BUTTON7_timer, OnBtn1Clicked_Play)
 
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
@@ -86,6 +88,10 @@ int CTempoView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		CRect(50, 290, 280, 340), this, IDC_BUTTON4);
 	m_Btn_vpered_jump.ShowWindow(SW_SHOW);
 
+	m_Btn_StartPlay.Create(_T(" <<< Play >>> "), BS_PUSHBUTTON,
+		CRect(50, 350, 280, 390), this, IDC_BUTTON7_timer);
+	m_Btn_StartPlay.ShowWindow(SW_SHOW);
+
 	
 
 	return 0;
@@ -108,6 +114,11 @@ void CTempoView::OnBtn1Clicked_Nazad_Jump()
 	pDoc->UpdateAllViews(NULL);
 
 	m_Edit_info_num_cadr.SetWindowTextA(std::to_string(pDoc->numCadrs[pDoc->numcalccadrCount]).c_str());
+}
+
+void CTempoView::OnBtn1Clicked_Play()
+{
+	SetTimer(ID_TIMER_RENDER, static_cast<UINT>(timestump), NULL);
 }
 
 void CTempoView::OnBtn1Clicked_Vpered()
@@ -307,9 +318,10 @@ void CTempoView::OnTimer(UINT_PTR nIDEvent)
 
 	if(ID_TIMER_RENDER == nIDEvent)
 	{
-		CTempoDoc* pDoc = GetDocument();
+		CTempoDoc* pDoc = GetDocument();		
 		pDoc->ShowNextFrame();
 		pDoc->UpdateAllViews(NULL);
+		m_Edit_info_num_cadr.SetWindowTextA(std::to_string(pDoc->cadrCount).c_str());
 	}
 }
 
@@ -331,7 +343,7 @@ BOOL CTempoView::OnEraseBkgnd(CDC* pDC)
 LRESULT CTempoView::OnSetfps(WPARAM wParam, LPARAM lParam)
 {
 
-	return 1;
+	//return 1;
 
 	if (static_cast<int>(wParam) <= 0)
 	{

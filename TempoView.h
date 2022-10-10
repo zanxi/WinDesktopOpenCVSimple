@@ -12,6 +12,8 @@ constexpr UINT IDC_BUTTON5{ 1004 };
 
 constexpr UINT IDC_BUTTON3{ 1003 };
 
+constexpr UINT IDC_BUTTON7_timer{ 1007 };
+
 class CTempoView : public CView
 {
 protected: // create from serialization only
@@ -66,6 +68,8 @@ private:
 	CButton m_Btn_vpered_jump;
 	CButton m_Btn_Nazad_jump;
 
+	CButton m_Btn_StartPlay;
+
 	CEdit m_Edit_info_num_cadr;
 	bool m_redBlack{false};
 
@@ -76,6 +80,8 @@ public:
 
 	void OnBtn1Clicked_Nazad_Jump();
 	void OnBtn1Clicked_Vpered_Jump();
+
+	void OnBtn1Clicked_Play();
 
 
 // Generated message map functions

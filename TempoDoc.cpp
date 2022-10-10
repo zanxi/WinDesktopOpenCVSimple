@@ -468,13 +468,11 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		naborCadrs[6] = { cv::Point(1004,148), cv::Point(1024,31) }; // Test_6.json
 		naborCadrs[48] = { cv::Point(777, 195), cv::Point(876, 302) }; // Test_48.json
 
-
-
 		//Calccadr;
 
 		m_Mat = m_VideoDav->cadr(cadrCount);
 		SetupBitmapInfo(m_Mat);
-	    ::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 1000 / (int)10, 0);
+	    //::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 1000 / (int)10, 0);
 
 		
 
@@ -527,23 +525,8 @@ void CTempoDoc::ShowNextFrameNazad()
 		{
 			m_Mat = m_VideoDav->cadr(cadrCount);			
 			
-			debugSquares(std::vector<std::vector<cv::Point>>
-			{
-				{cv::Point(584, 338), cv::Point(634, 378)}, // test_1.json
-				//{ cv::Point(622,438), cv::Point(644,394) }, // Test_2.json
-				//{ cv::Point(339,4), cv::Point(651,149) }, // Test_21.json
-				//{ cv::Point(636,357), cv::Point(688,302) }, // Test_3.json
-				//{ cv::Point(684,339), cv::Point(753,266) }, // Test_4.json
-				//{ cv::Point(664,339), cv::Point(731,269) }, // Test_46.json
-				//{ cv::Point(736,210), cv::Point(826,305) }, // Test_47.json
-				//{ cv::Point(777,195), cv::Point(876,302) }, // Test_5.json
-				//{ cv::Point(1004,148), cv::Point(1024,31) }, // Test_6.json
-				//{ cv::Point(), cv::Point() }, // Test_.json
-				//{ cv::Point(), cv::Point() }, // Test_.json
-
-				//{ cv::Point(777, 195), cv::Point(876, 302) }, // Test_48.json
-
-			}, m_Mat);
+			int nn = (cadrCount % (numCadrs.size() - 1));
+			debugSquares({ naborCadrs[numCadrs[nn]] }, m_Mat);
 
 			/**/
 
@@ -578,15 +561,17 @@ void CTempoDoc::ShowNextFrameNazad()
 void CTempoDoc::ShowNextFrameVpered_Jump()
 {
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);	
-	if (numcalccadrCount < numCadrs.size()-1)numcalccadrCount++;
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
+
+	if (numcalccadrCount < numCadrs.size()-1)numcalccadrCount++;	
 }
 
 void CTempoDoc::ShowNextFrameNazad_Jump()
 {
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);
-	if (numcalccadrCount >1)numcalccadrCount--;
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
+
+	if (numcalccadrCount >1)numcalccadrCount--;	
 }
 
 
@@ -599,25 +584,9 @@ void CTempoDoc::ShowNextFrameVpered()
 		//if (cadrCount < m_VideoDav->CountKadr)
 		{
 			m_Mat = m_VideoDav->cadr(cadrCount);
-
-			
-			debugSquares(std::vector<std::vector<cv::Point>>
-			{
-				{cv::Point(584, 338), cv::Point(634, 378)}, // test_1.json
-				//{ cv::Point(622,438), cv::Point(644,394) }, // Test_2.json
-				//{ cv::Point(339,4), cv::Point(651,149) }, // Test_21.json
-				//{ cv::Point(636,357), cv::Point(688,302) }, // Test_3.json
-				//{ cv::Point(684,339), cv::Point(753,266) }, // Test_4.json
-				//{ cv::Point(664,339), cv::Point(731,269) }, // Test_46.json
-				//{ cv::Point(736,210), cv::Point(826,305) }, // Test_47.json
-				//{ cv::Point(777,195), cv::Point(876,302) }, // Test_5.json
-				//{ cv::Point(1004,148), cv::Point(1024,31) }, // Test_6.json
-				//{ cv::Point(), cv::Point() }, // Test_.json
-				//{ cv::Point(), cv::Point() }, // Test_.json
-
-				//{ cv::Point(777, 195), cv::Point(876, 302) }, // Test_48.json
-
-			}, m_Mat);
+						
+			int nn = (cadrCount % (numCadrs.size() - 1));
+			debugSquares({ naborCadrs[numCadrs[nn]] }, m_Mat);
 
 			/**/
 
@@ -650,137 +619,30 @@ void CTempoDoc::ShowNextFrameVpered()
 	}
 }
 
-
-
-
-
-
 void CTempoDoc::ShowNextFrame()
 {
 
-	//if ((std::string(lpszPathName).find(".dav") != std::string::npos))
-	{
 		//return;
-		if (cadrCount < m_VideoDav->CountKadr)
-		{
-			m_Mat = m_VideoDav->cadr(cadrCount);			
+		m_Mat = m_VideoDav->cadr(cadrCount);
 
-			/*
-			debugSquares(std::vector<std::vector<cv::Point>>
-			{
-				{cv::Point(584, 338), cv::Point(634, 378)}, // test_1.json
-				{ cv::Point(622,438), cv::Point(644,394) }, // Test_2.json
-				{ cv::Point(339,4), cv::Point(651,149) }, // Test_21.json
-				{ cv::Point(636,357), cv::Point(688,302) }, // Test_3.json
-				{ cv::Point(684,339), cv::Point(753,266) }, // Test_4.json
-				{ cv::Point(664,339), cv::Point(731,269) }, // Test_46.json
-				{ cv::Point(736,210), cv::Point(826,305) }, // Test_47.json
-				{ cv::Point(777,195), cv::Point(876,302) }, // Test_5.json
-				{ cv::Point(1004,148), cv::Point(1024,31) }, // Test_6.json
-				//{ cv::Point(), cv::Point() }, // Test_.json
-				//{ cv::Point(), cv::Point() }, // Test_.json
-
-				{ cv::Point(777, 195), cv::Point(876, 302) }, // Test_48.json
-
-			}, m_Mat);
-
-			/**/
-
-			//Bound(m_Mat);
-
-
-
-			/*debugSquares(std::vector<std::vector<cv::Point>>
-	        {
-		        {cv::Point(584, 338), cv::Point(634, 378)},
-				{cv::Point(777, 195), cv::Point(876, 302)}
-	        }, m_Mat);*/
-
-			/*find_squares(m_Mat, std::vector<std::vector<cv::Point>>
-				{ 
-					{cv::Point(584, 338), cv::Point(634, 378)},
-				});*/
-			
-			//debugSquares([[cv::Point(10, 10), cv::Point(10, 10)]], m_Mat);
-			// cadrCount = 1;
-			//SetupBitmapInfo(m_Mat);
-
-			//CView* pView = NULL;
-			//POSITION pos = GetFirstViewPosition();
-			//::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS_STOP, 0, 0);
-		}
-		else
-		{
-			cadrCount = 1;
+		int nn = (cadrCount % (numCadrs.size() - 1));
+		debugSquares({ naborCadrs[numCadrs[nn]]}, m_Mat);
+				
+		if (cadrCount < m_VideoDav->CountKadr-1) cadrCount++;
+		else 
+		{			
 			CView* pView = NULL;
 			POSITION pos = GetFirstViewPosition();
 			while (NULL != pos)
 			{
 				pView = GetNextView(pos);
-			    ::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS_STOP, 0, 0);
-			}
-			
-		}		
-		cadrCount++;
-		return;
-
-		CView* pView = NULL;
-		POSITION pos = GetFirstViewPosition();
-		return;
-		while (NULL != pos)
-		{
-			pView = GetNextView(pos);
-			if (cadrCount > m_VideoDav->CountKadr - 1)
-			{
-				::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 0, 0);
+				::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS_STOP, 0, 0);
 			}
 		}
-	}
-	//else
-	//return;
-	//{
-	//	if (m_Video.isOpened())
-	//	{
-	//		m_Video.read(m_Mat);
-	//	}
-	//	else
-	//	{
-	//		return;
-	//	}
-
-	//	int nIndex = static_cast<int>(m_Video.get(CV_CAP_PROP_POS_FRAMES));
-	//	int nTotal = static_cast<int>(m_Video.get(CV_CAP_PROP_FRAME_COUNT));
-
-	//	if (nIndex >= nTotal)
-	//	{
-	//		CView* pView = NULL;
-	//		POSITION pos = GetFirstViewPosition();
-	//		while (NULL != pos)
-	//		{
-	//			pView = GetNextView(pos);
-	//			//::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 0, 0);
-	//		}
-	//	}
-	//	else {
-	//		//::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 0, 0);
-	//	}
-	//}	
+		return;
 }
 
 void CTempoDoc::ShowNextFrameDav()
 {
 
-	if (cadrCount < m_VideoDav->CountKadr)m_Mat = m_VideoDav->cadr(cadrCount);
-	SetupBitmapInfo(m_Mat);
-	cadrCount++;
-
-	CView* pView = NULL;
-	POSITION pos = GetFirstViewPosition();
-	while (NULL != pos)
-	{
-		pView = GetNextView(pos);
-		::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 0, 0);
-	}
-
-	
 }

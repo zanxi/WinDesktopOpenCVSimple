@@ -56,3 +56,51 @@
 #endif
 
 
+#include <iostream>
+#include <istream>
+#include <fstream>
+#include <thread>
+
+#include <map>
+#include <vector>
+#include <list>
+#include <string>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <exception>
+#include <stack>
+#include <mutex>
+#include <windows.h>
+#include <boost/algorithm/string.hpp>
+#include <boost/lockfree/queue.hpp>
+#include <boost/lockfree/spsc_queue.hpp>
+
+#ifdef _MSC_VER
+#include <boost/config/compiler/visualc.hpp>
+#endif
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/foreach.hpp>
+
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/member.hpp>
+
+
+
+#include <cassert>
+#include <exception>
+#include <iostream>
+#include <sstream>
+#include <string>
+
+#include <filesystem>
+#include <ppl.h>
+#include <concurrent_vector.h>
+#include <concurrent_queue.h>
+//#include <tbb/concurrent_vector.h>
+
+
+using namespace std;
+
