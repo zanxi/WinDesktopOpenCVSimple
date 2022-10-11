@@ -10,6 +10,7 @@
 #endif
 
 #include "TempoDoc.h"
+#include "jsonlib.h"
 
 #include <propkey.h>
 
@@ -518,7 +519,7 @@ bool r_rectangle(cv::Rect rect, std::vector<std::vector<cv::Point> > squares)
 }
 
 
-void Bound1(std::vector<std::vector<cv::Point> > squares, cv::Mat& src_mat)
+void Bound1(int numCadr, std::vector<std::vector<cv::Point> > squares, cv::Mat& src_mat)
 {
 
 	//std::vector<std::vector<cv::Point>> contours2;
@@ -600,9 +601,17 @@ void Bound1(std::vector<std::vector<cv::Point> > squares, cv::Mat& src_mat)
 			polylines[0].push_back(points[j]);
 
 		//draw them on the bounding image.
-		if (r_rectangle(rect, squares)) cv::rectangle(src_mat, rect, cv::Scalar(0, 0, 255), 2);
+		if (r_rectangle(rect, squares))
+		{
+			InsertJsonRect(rect,numCadr);
+			cv::rectangle(src_mat, rect, cv::Scalar(0, 0, 255), 2);
+		}
 		//cv::polylines(src_mat, polylines, true, cv::Scalar(0, 255, 0), 2);		
-		if (r_center(radius, center.x, center.y, squares)) cv::circle(src_mat, center, radius, cv::Scalar(255, 0, 0), 2);
+		if (r_center(radius, center.x, center.y, squares))
+		{
+			InsertJsonCircle(radius,center,numCadr);
+			cv::circle(src_mat, center, radius, cv::Scalar(255, 0, 0), 2);
+		}
 		
 	}
 }
@@ -833,7 +842,8 @@ void CTempoDoc::ShowNextFrameNazad()
 			m_Mat = m_VideoDav->cadr(cadrCount);		
 			int nn = (cadrCount % (numCadrs.size() - 1));
 			debugSquares({ naborCadrs[numCadrs[nn]] }, m_Mat);
-			Bound1({ naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
+			
+			Bound1(numcalccadrCount, { naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
 			/**/
 
 			
@@ -869,7 +879,7 @@ void CTempoDoc::ShowNextFrameVpered_Jump()
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);	
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
 
-	Bound1({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
+	Bound1(numcalccadrCount,{ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 
 	if (numcalccadrCount < numCadrs.size()-1)numcalccadrCount++;	
 }
@@ -878,7 +888,7 @@ void CTempoDoc::ShowNextFrameNazad_Jump()
 {
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
-	Bound1({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
+	Bound1(numcalccadrCount, { naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 
 	if (numcalccadrCount >1)numcalccadrCount--;	
 }
@@ -898,7 +908,7 @@ void CTempoDoc::ShowNextFrameVpered()
 
 			/**/
 
-			Bound1({ naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
+			Bound1(cadrCount,{ naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
 
 
 

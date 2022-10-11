@@ -1,5 +1,5 @@
 #pragma once
-#include "stdwin.h"
+#include "stdafx.h"
 #include ".\StructInfoFile.h"
 
 wstring string_to_wstring(string& s)
@@ -42,26 +42,27 @@ void ResetFile(string pathFile)
 //boost::lockfree::spsc_queue<StructInfoFile> scandir(string p)
 vector<StructInfoFile> scandir(string p, string addPref)
 {
-	string path = p + addPref;
-	wstring Path = string_to_wstring(path);
-
-	WIN32_FIND_DATA FindFileData;
-	HANDLE hf;
-	hf = FindFirstFile((string_to_wstring(path)).c_str(), &FindFileData);
 	vector<StructInfoFile> v;
-	if (hf != INVALID_HANDLE_VALUE)
-	{
-		do
-		{
-			//wcout << "FindFileData.dwFileAttributes= " << FindFileData.dwFileAttributes << endl;
-			if (FindFileData.dwFileAttributes != FILE_ATTRIBUTE_DIRECTORY)
-			{				
-				StructInfoFile sf;
-				sf.SetNameFile(p, wstring_to_string(FindFileData.cFileName));
-				v.push_back(sf);
-			}
-		} while (FindNextFile(hf, &FindFileData) != 0);
-	}
+	//string path = p + addPref;
+	//wstring Path = string_to_wstring(path);
+
+	//WIN32_FIND_DATA FindFileData;
+	//HANDLE hf;
+	//hf = FindFirstFile((string_to_wstring(path)).c_str(), &FindFileData);
+	//vector<StructInfoFile> v;
+	//if (hf != INVALID_HANDLE_VALUE)
+	//{
+	//	do
+	//	{
+	//		//wcout << "FindFileData.dwFileAttributes= " << FindFileData.dwFileAttributes << endl;
+	//		if (FindFileData.dwFileAttributes != FILE_ATTRIBUTE_DIRECTORY)
+	//		{				
+	//			StructInfoFile sf;
+	//			sf.SetNameFile(p, wstring_to_string(FindFileData.cFileName));
+	//			v.push_back(sf);
+	//		}
+	//	} while (FindNextFile(hf, &FindFileData) != 0);
+	//}
 
 	return v;
 }

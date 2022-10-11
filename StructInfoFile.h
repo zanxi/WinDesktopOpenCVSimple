@@ -1,5 +1,5 @@
 #pragma once
-#include ".\stdwin.h"
+#include ".\stdafx.h"
 
 class StructInfoFile
 {
