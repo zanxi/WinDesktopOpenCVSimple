@@ -36,6 +36,7 @@ CTempoDoc::CTempoDoc()
 
 CTempoDoc::~CTempoDoc()
 {
+	m_VideoDav->~DAV();
 	if(NULL != m_pBmi)
 		delete m_pBmi;
 }
@@ -264,9 +265,85 @@ void find_squares(cv::Mat& image, std::vector<std::vector<cv::Point> >& squares)
 
 void CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv::Mat image)
 {
+	//return;
+	//vector<vector<cv::Point> > contours;
+	//vector<cv::Vec4i> hierarchy;
+
+	//cv::Mat gray;// = image.clone();
+	//cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+
+	//cv::threshold(gray, gray, 1, 255, cv::THRESH_BINARY);
+	////cv::xors(gray, cv::Scalar(255, 0, 0, 0), gray, NULL);
+	//cv::dilate(gray, gray, NULL, cv::Point(0,0));
+
+	//findContours(gray, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+
+	//cv::drawContours(image, contours, -1, CV_RGB(0, 0, 0), -1, cv::FILLED, 8);
+
+	//for (size_t i = 0; i < contours.size(); i++)
+	//{
+	//	cv::Mat pointsf;
+	//	cv::Mat(contours[i]).convertTo(pointsf, CV_32F);
+
+	//	//cv::RotatedRect minRect = minAreaRect(cv::Mat(squares[i]));
+	//	//cv::Point2f rect_points[4];
+	//	//minRect.points(rect_points);
+	//	//ellipse(image, minRect, cv::Scalar(0, 0, 255), 1, 8);
+
+	//	cv::RotatedRect box = fitEllipse(pointsf);
+	//	ellipse(image, box, cv::Scalar(0, 0, 255), 1, 8);
+	//}
+
+	//cv::Mat gray, storage;
+	//cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+	////cv::cvsm(gray, gray, cv::GaussianBlur, 7, 7);
+
+	////IplImage* cc_img = cv::CreateImage(cv::Size(gray), gray->depth, 3);
+	////cv::SetZero(cc_img);
+	//cv::Scalar(ext_color);
+
+	//cv::Canny(gray, gray, 10, 30, 3);
+
+	////cv::memStorage* storage = cv::storag createMemStorage(0);
+	//cv::HoughCircles(gray, storage, cv::HOUGH_GRADIENT, 1, 40 / 6, 100, 50);
+	//cv::cvtColor(gray, src, cv::COLOR_GRAY2BGR);
+	//for (size_t i = 0; i < storage->total; i++)
+	//{
+	//	// round the floats to an int
+	//	float* p = (float*)cv::getElemSize(circles, i);
+	//	cv::Point center(cvRound(p[0]), cvRound(p[1]));
+	//	int radius = cvRound(p[2]);
+
+	//	// draw the circle center
+	//	//cvCircle(cc_img, center, 3, CV_RGB(0,255,0), -1, 8, 0 );
+
+	//	// draw the circle outline
+	//	cv::circle(cc_img, center, radius + 1, CV_RGB(0, 0, 255), 2, 8, 0);
+
+	//	//printf("x: %d y: %d r: %d\n", center.x, center.y, radius);
+	//}
+
+	//CvMemStorage* mem;
+	//mem = cvCreateMemStorage(0);
+	//CvSeq* contours = 0;
+	//cvCvtColor(cc_img, gray, CV_BGR2GRAY);
+	//// Use either this:
+	//int n = cv::findContours(gray, mem, &contours, sizeof(cv::cvContour), cv::RETR_CCOMP, cv::CHAIN_APPROX_NONE, cv::Point(0, 0));
+	//// Or this:
+	////int n = cvFindContours(gray, mem, &contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));
+
+	//for (; contours != 0; contours = contours->h_next)
+	//{
+	//	ext_color = CV_RGB(rand() & 255, rand() & 255, rand() & 255); //randomly coloring different contours
+	//	cv::drawContours(cc_img, contours, ext_color, CV_RGB(0, 0, 0), -1, CV_FILLED, 8, cvPoint(0, 0));
+	//}
+
+	//***************************************
+	//return;
+
 	for (int i = 0; i < squares.size(); i++) {
 		// draw contour
-		cv::drawContours(image, squares, i, cv::Scalar(255, 0, 0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+		//cv::drawContours(image, squares, i, cv::Scalar(255, 0, 0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
 
 		// draw bounding rect
 		cv::Rect rect = boundingRect(cv::Mat(squares[i]));
@@ -277,9 +354,18 @@ void CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv::M
 		cv::Point2f rect_points[4];
 		minRect.points(rect_points);
 		for (int j = 0; j < 4; j++) {
-			cv::line(image, rect_points[j], rect_points[(j + 1) % 4], cv::Scalar(0, 0, 255), 1, 8); // blue
+			//cv::line(image, rect_points[j], rect_points[(j + 1) % 4], cv::Scalar(0, 0, 255), 1, 8); // blue
 		}
 	}
+
+	//vector<vector<cv::Point> > contours;
+
+	//findContours(image, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+	//cv::drawContours(image, contours, 0, cv::Scalar(255, 0, 0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
+	////cv::RotatedRect rotRecs[contours.size()];
+	//for (int i = 0; i < contours.size(); i++) {
+	//	//rotRecs[i] = fitEllipse(contours[i]);
+	//}
 
 	//return image;
 }
@@ -299,7 +385,7 @@ static double angle2(cv::Point pt1, cv::Point pt2, cv::Point pt0)
  */
 void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour)
 {
-	return;
+	if(label!="CIR")return;
 
 	int fontface = cv::FONT_HERSHEY_SIMPLEX;
 	double scale = 0.4;
@@ -317,12 +403,16 @@ void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& cont
 
 void Bound2(cv::Mat& src)
 {
+	return;
 	//cv::Mat src = cv::imread("polygon.png");
 	//cv::Mat src = cv::imread("assets/basic-shapes-2.png");
 	
 	// Convert to grayscale
+
+	cv::Mat contour_mat = src.clone();
+
 	cv::Mat gray;
-	cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+	cv::cvtColor(contour_mat, gray, cv::COLOR_BGR2GRAY);
 
 	// Use Canny instead of threshold to catch squares with gradient shading
 	cv::Mat bw;
@@ -347,7 +437,7 @@ void Bound2(cv::Mat& src)
 
 		if (approx.size() == 3)
 		{
-			setLabel(dst, "TRI", contours[i]);    // Triangles
+			setLabel(src, "TRI", contours[i]);    // Triangles
 		}
 		else if (approx.size() >= 4 && approx.size() <= 6)
 		{
@@ -369,11 +459,11 @@ void Bound2(cv::Mat& src)
 			// Use the degrees obtained above and the number of vertices
 			// to determine the shape of the contour
 			if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
-				setLabel(dst, "RECT", contours[i]);
+				setLabel(src, "RECT", contours[i]);
 			else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
-				setLabel(dst, "PENTA", contours[i]);
+				setLabel(src, "PENTA", contours[i]);
 			else if (vtc == 6 && mincos >= -0.55 && maxcos <= -0.45)
-				setLabel(dst, "HEXA", contours[i]);
+				setLabel(src, "HEXA", contours[i]);
 		}
 		else
 		{
@@ -384,24 +474,62 @@ void Bound2(cv::Mat& src)
 
 			if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
 				std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
-				setLabel(dst, "CIR", contours[i]);
+			{
+				cv::Scalar red(0, 0, 255);
+				cv::drawContours(src, contours[i], radius, red, 2);
+				setLabel(src, "CIR", contours[i]);
+			}
 		}
 	}
 }
 
-
-void Bound1(cv::Mat& src_mat)
+bool r_center(float radius, int cx, int cy, std::vector<std::vector<cv::Point> > squares)
 {
 
-	std::vector<std::vector<cv::Point>> contours2;
-	std::vector<cv::Vec4i> hierarchy;
-	cv::findContours(src_mat, contours2, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+	double r = 0;
+	double S = 0;
+	// считаем среднее расстояние от центра окружности до оболочки
+	for (auto& m : squares)
+	{
+		for (int i = 0; i < 2; i++)
+			r += (cx - m[i].x) * (cx - m[i].x) + (cy - m[i].y) * (cy - m[i].y);
+	}
+	if (radius>30&&radius<40&&40<sqrt(r) &&sqrt(r) < 100) return true;
 
-	cv::Scalar red(0, 0, 255);
-	cv::drawContours(src_mat, contours2, -1, red, 2);
-	//showImg(input, "Detected Contour");
+	return false;
+}
 
-	return;
+bool r_rectangle(cv::Rect rect, std::vector<std::vector<cv::Point> > squares)
+{
+	double r = 0;
+	double S = (rect.br().x - rect.tl().x)* (rect.br().y - rect.tl().y);
+	//for (auto& m : squares)
+	// считаем среднее расстояние от вершин найденного контура до оболочки
+	{		
+	  	r = (rect.br().x - squares[0][1].x) * (rect.br().x - squares[0][1].x) +
+			(rect.br().y - squares[0][1].y) * (rect.br().y - squares[0][1].y)+
+			(rect.tl().x - squares[0][0].x) * (rect.tl().x - squares[0][0].x) +
+			(rect.tl().y - squares[0][0].y) * (rect.tl().y - squares[0][0].y);
+	}
+	//if (S>100&&140<sqrt(r)&& sqrt(r) < 200) return true;
+	if (S > 100 && sqrt(r) < 50) return true;
+
+	return false;
+}
+
+
+void Bound1(std::vector<std::vector<cv::Point> > squares, cv::Mat& src_mat)
+{
+
+	//std::vector<std::vector<cv::Point>> contours2;
+	//std::vector<cv::Vec4i> hierarchy;
+	//cv::findContours(src_mat, contours2, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
+	//cv::Scalar red(0, 0, 255);
+	//cv::drawContours(src_mat, contours2, -1, red, 2);
+	////showImg(input, "Detected Contour");
+
+	//return;
 
 	const char* file_name = "shape.png";
 
@@ -472,11 +600,13 @@ void Bound1(cv::Mat& src_mat)
 			polylines[0].push_back(points[j]);
 
 		//draw them on the bounding image.
-		//cv::rectangle(src_mat, rect, cv::Scalar(0, 0, 255), 2);
-		//cv::polylines(src_mat, polylines, true, cv::Scalar(0, 255, 0), 2);
-		if(radius > 10 &&radius<22)cv::circle(src_mat, center, radius, cv::Scalar(255, 0, 0), 2);
+		if (r_rectangle(rect, squares)) cv::rectangle(src_mat, rect, cv::Scalar(0, 0, 255), 2);
+		//cv::polylines(src_mat, polylines, true, cv::Scalar(0, 255, 0), 2);		
+		if (r_center(radius, center.x, center.y, squares)) cv::circle(src_mat, center, radius, cv::Scalar(255, 0, 0), 2);
+		
 	}
 }
+
 
 // **********************************************
 cv::Mat img_gray, input_img;
@@ -652,9 +782,7 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_Mat = m_VideoDav->cadr(cadrCount);
 		SetupBitmapInfo(m_Mat);
 	    //::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 1000 / (int)10, 0);
-
 		
-
 	}
 	
 	{
@@ -702,14 +830,13 @@ void CTempoDoc::ShowNextFrameNazad()
 		//return;
 		//if (cadrCount > 1)
 		{
-			m_Mat = m_VideoDav->cadr(cadrCount);			
-			
+			m_Mat = m_VideoDav->cadr(cadrCount);		
 			int nn = (cadrCount % (numCadrs.size() - 1));
 			debugSquares({ naborCadrs[numCadrs[nn]] }, m_Mat);
-
+			Bound1({ naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
 			/**/
 
-			Bound3(m_Mat);
+			
 
 			if (cadrCount > 1) cadrCount--;
 
@@ -742,6 +869,8 @@ void CTempoDoc::ShowNextFrameVpered_Jump()
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);	
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
 
+	Bound1({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
+
 	if (numcalccadrCount < numCadrs.size()-1)numcalccadrCount++;	
 }
 
@@ -749,6 +878,7 @@ void CTempoDoc::ShowNextFrameNazad_Jump()
 {
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
+	Bound1({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 
 	if (numcalccadrCount >1)numcalccadrCount--;	
 }
@@ -761,15 +891,14 @@ void CTempoDoc::ShowNextFrameVpered()
 	{
 		//return;
 		//if (cadrCount < m_VideoDav->CountKadr)
-		{
-			m_Mat = m_VideoDav->cadr(cadrCount);
-						
+		{			
+			m_Mat = m_VideoDav->cadr(cadrCount);						
 			int nn = (cadrCount % (numCadrs.size() - 1));
 			debugSquares({ naborCadrs[numCadrs[nn]] }, m_Mat);
 
 			/**/
 
-			Bound3(m_Mat);
+			Bound1({ naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
 
 
 
