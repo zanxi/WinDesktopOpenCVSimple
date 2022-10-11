@@ -262,7 +262,7 @@ void find_squares(cv::Mat& image, std::vector<std::vector<cv::Point> >& squares)
 	}
 }
 
-cv::Mat CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv::Mat image)
+void CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv::Mat image)
 {
 	for (int i = 0; i < squares.size(); i++) {
 		// draw contour
@@ -281,11 +281,128 @@ cv::Mat CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv
 		}
 	}
 
-	return image;
+	//return image;
 }
 
-void Bound(cv::Mat& src_mat)
+
+static double angle2(cv::Point pt1, cv::Point pt2, cv::Point pt0)
 {
+	double dx1 = pt1.x - pt0.x;
+	double dy1 = pt1.y - pt0.y;
+	double dx2 = pt2.x - pt0.x;
+	double dy2 = pt2.y - pt0.y;
+	return (dx1 * dx2 + dy1 * dy2) / sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2) + 1e-10);
+}
+
+/**
+ * Helper function to display text in the center of a contour
+ */
+void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour)
+{
+	return;
+
+	int fontface = cv::FONT_HERSHEY_SIMPLEX;
+	double scale = 0.4;
+	int thickness = 1;
+	int baseline = 0;
+
+	cv::Size text = cv::getTextSize(label, fontface, scale, thickness, &baseline);
+	cv::Rect r = cv::boundingRect(contour);
+
+	cv::Point pt(r.x + ((r.width - text.width) / 2), r.y + ((r.height + text.height) / 2));
+	cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), CV_RGB(255, 255, 255), cv::FILLED);
+	cv::putText(im, label, pt, fontface, scale, CV_RGB(0, 0, 0), thickness, 8);
+}
+
+
+void Bound2(cv::Mat& src)
+{
+	//cv::Mat src = cv::imread("polygon.png");
+	//cv::Mat src = cv::imread("assets/basic-shapes-2.png");
+	
+	// Convert to grayscale
+	cv::Mat gray;
+	cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+
+	// Use Canny instead of threshold to catch squares with gradient shading
+	cv::Mat bw;
+	cv::Canny(gray, bw, 0, 50, 5);
+
+	// Find contours
+	std::vector<std::vector<cv::Point> > contours;
+	cv::findContours(bw.clone(), contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+	std::vector<cv::Point> approx;
+	cv::Mat dst = src.clone();
+
+	for (int i = 0; i < contours.size(); i++)
+	{
+		// Approximate contour with accuracy proportional
+		// to the contour perimeter
+		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.02, true);
+
+		// Skip small or non-convex objects 
+		if (std::fabs(cv::contourArea(contours[i])) < 100 || !cv::isContourConvex(approx))
+			continue;
+
+		if (approx.size() == 3)
+		{
+			setLabel(dst, "TRI", contours[i]);    // Triangles
+		}
+		else if (approx.size() >= 4 && approx.size() <= 6)
+		{
+			// Number of vertices of polygonal curve
+			int vtc = approx.size();
+
+			// Get the cosines of all corners
+			std::vector<double> cos;
+			for (int j = 2; j < vtc + 1; j++)
+				cos.push_back(angle(approx[j % vtc], approx[j - 2], approx[j - 1]));
+
+			// Sort ascending the cosine values
+			std::sort(cos.begin(), cos.end());
+
+			// Get the lowest and the highest cosine
+			double mincos = cos.front();
+			double maxcos = cos.back();
+
+			// Use the degrees obtained above and the number of vertices
+			// to determine the shape of the contour
+			if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
+				setLabel(dst, "RECT", contours[i]);
+			else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
+				setLabel(dst, "PENTA", contours[i]);
+			else if (vtc == 6 && mincos >= -0.55 && maxcos <= -0.45)
+				setLabel(dst, "HEXA", contours[i]);
+		}
+		else
+		{
+			// Detect and label circles
+			double area = cv::contourArea(contours[i]);
+			cv::Rect r = cv::boundingRect(contours[i]);
+			int radius = r.width / 2;
+
+			if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
+				std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
+				setLabel(dst, "CIR", contours[i]);
+		}
+	}
+}
+
+
+void Bound1(cv::Mat& src_mat)
+{
+
+	std::vector<std::vector<cv::Point>> contours2;
+	std::vector<cv::Vec4i> hierarchy;
+	cv::findContours(src_mat, contours2, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
+	cv::Scalar red(0, 0, 255);
+	cv::drawContours(src_mat, contours2, -1, red, 2);
+	//showImg(input, "Detected Contour");
+
+	return;
+
 	const char* file_name = "shape.png";
 
 	//cv::Mat src_mat, gray_mat, canny_mat;
@@ -360,6 +477,68 @@ void Bound(cv::Mat& src_mat)
 		if(radius > 10 &&radius<22)cv::circle(src_mat, center, radius, cv::Scalar(255, 0, 0), 2);
 	}
 }
+
+// **********************************************
+cv::Mat img_gray, input_img;
+int thresh = 100;
+const int MAX_THRESH = 255;
+
+
+void draw_and_fill_contours(std::vector<std::vector<cv::Point>>& contours,
+	std::vector<std::vector<cv::Point>>& hull,
+	std::vector<cv::Vec4i>& hierarchy)
+{
+
+	cv::Mat contours_result = input_img.clone();
+	cv::Mat fill_contours_result = cv::Mat::zeros(img_gray.size(), CV_8UC3);
+
+	for (unsigned int i = 0, n = contours.size(); i < n; ++i)
+	{
+		cv::Scalar color = cv::Scalar(0, 0, 255);
+		cv::drawContours(contours_result, contours, i, color, 4, 8, hierarchy, 0, cv::Point());
+	}
+
+	cv::fillPoly(fill_contours_result, hull, cv::Scalar(255, 255, 255));
+
+	//cv::imshow("Contours Result", contours_result);
+	//cv::imshow("Fill Contours Result", fill_contours_result);
+
+}
+
+
+
+
+void find_contours(int, void*) {
+	cv::Mat canny_output;
+	cv::Canny(img_gray, canny_output, thresh, thresh * 2);
+	std::vector<std::vector<cv::Point> > contours;
+	std::vector<cv::Vec4i> hierarchy;
+	cv::findContours(canny_output, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
+	std::vector<std::vector<cv::Point>> hull(contours.size());
+	for (unsigned int i = 0, n = contours.size(); i < n; ++i) {
+		cv::convexHull(cv::Mat(contours[i]), hull[i], false);
+	}
+
+	draw_and_fill_contours(contours, hull, hierarchy);
+}
+
+void Bound3(cv::Mat& input_img)
+{
+	cv::cvtColor(input_img, img_gray, cv::COLOR_BGR2GRAY);
+	cv::blur(img_gray, img_gray, cv::Size(3, 3));
+	const std::string source_window("Source");
+	//cv::namedWindow(source_window.c_str());
+	//cv::imshow(source_window.c_str(), input_img);
+
+	//cv::createTrackbar("Thresh: ", source_window, &thresh, MAX_THRESH, find_contours);
+	find_contours(0, 0);
+}
+
+
+// **********************************************
+
+
 
 void CTempoDoc::SetupBitmapInfo(cv::Mat& mat)
 {
@@ -530,7 +709,7 @@ void CTempoDoc::ShowNextFrameNazad()
 
 			/**/
 
-			//Bound(m_Mat);
+			Bound3(m_Mat);
 
 			if (cadrCount > 1) cadrCount--;
 
@@ -590,7 +769,7 @@ void CTempoDoc::ShowNextFrameVpered()
 
 			/**/
 
-			//Bound(m_Mat);
+			Bound3(m_Mat);
 
 
 
