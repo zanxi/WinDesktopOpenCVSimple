@@ -43,9 +43,9 @@ int Bound4(cv::Mat& img);
 
 void Bound1(int numCadr, std::vector<std::vector<cv::Point> > squares, cv::Mat& src_mat)
 {
-	Bound4(src_mat);
+	//Bound4(src_mat);
 
-	return;
+	//return;
 
 	//std::vector<std::vector<cv::Point>> contours2;
 	//std::vector<cv::Vec4i> hierarchy;
