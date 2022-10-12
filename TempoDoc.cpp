@@ -358,6 +358,7 @@ void CTempoDoc::ShowNextFrameNazad_Jump()
 {
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
+
 	Bound1(numcalccadrCount, { naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 
 	if (numcalccadrCount >1)numcalccadrCount--;	
