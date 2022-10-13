@@ -1,13 +1,13 @@
 {
     "label": "null",
-    "shape_type": "polygon",
-    "group_id": "null",
+    "radius": "33.015247",
     "Points": [
         {
-            "673": "187"
-        },
-        {
-            "329": "0"
+            "1022": {
+                "000000": "78.000000"
+            }
         }
-    ]
+    ],
+    "shape_type": "polygon",
+    "group_id": "null"
 }

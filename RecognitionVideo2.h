@@ -21,8 +21,7 @@ bool r_center(float radius, int cx, int cy, std::vector<std::vector<cv::Point> >
 		for (int i = 0; i < 2; i++)
 			r += (cx - m[i].x) * (cx - m[i].x) + (cy - m[i].y) * (cy - m[i].y);
 	}
-	//if (radius > 30 && radius < 40 && 40 < sqrt(r) && sqrt(r) < 100) return true;
-	if ((radius > 30 && radius < 70) && (50 < sqrt(r) && sqrt(r) < 140)) return true;
+	if (radius > 30 && radius < 40 && 40 < sqrt(r) && sqrt(r) < 100) return true;
 
 	return false;
 }
@@ -40,9 +39,7 @@ bool r_rectangle(cv::Rect rect, std::vector<std::vector<cv::Point> > squares)
 			(rect.tl().y - squares[0][0].y) * (rect.tl().y - squares[0][0].y);
 	}
 	//if (S>100&&140<sqrt(r)&& sqrt(r) < 200) return true;
-	//if (((S >30 &&S < 40 && sqrt(r) < 70))||(S > 100 && sqrt(r) < 115)) return true;
-	//if (((S > 20 && S < 60 && sqrt(r) < 70)) || (S > 100 && sqrt(r) < 115)) return true;
-	if ( (S > 150 && sqrt(r)> 50 && sqrt(r) < 115)) return true;
+	if (((S >30 &&S < 40 && sqrt(r) < 130))||(S > 100 && sqrt(r) < 155)) return true;
 
 	return false;
 }

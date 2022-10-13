@@ -300,7 +300,7 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 
 
-
+// --- < ---
 void CTempoDoc::ShowNextFrameNazad()
 {
 
@@ -344,26 +344,28 @@ void CTempoDoc::ShowNextFrameNazad()
 	}	
 }
 
+// --- >>> ---
 void CTempoDoc::ShowNextFrameVpered_Jump()
 {
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);	
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
 
-	Bound1(numcalccadrCount,{ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
+	Bound1(numCadrs[numcalccadrCount],{ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 
 	if (numcalccadrCount < numCadrs.size()-1)numcalccadrCount++;	
 }
-
+// --- <<< ---
 void CTempoDoc::ShowNextFrameNazad_Jump()
 {
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
 
-	Bound1(numcalccadrCount, { naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
+	Bound1(numCadrs[numcalccadrCount], { naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 
 	if (numcalccadrCount >1)numcalccadrCount--;	
 }
 
+// --- > ---
 
 void CTempoDoc::ShowNextFrameVpered()
 {
@@ -408,6 +410,7 @@ void CTempoDoc::ShowNextFrameVpered()
 	}
 }
 
+// Play
 void CTempoDoc::ShowNextFrame()
 {
 
@@ -416,6 +419,8 @@ void CTempoDoc::ShowNextFrame()
 
 		int nn = (cadrCount % (numCadrs.size() - 1));
 		debugSquares({ naborCadrs[numCadrs[nn]]}, m_Mat);
+
+		Bound1(numcalccadrCount, { naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
 				
 		if (cadrCount < m_VideoDav->CountKadr-1) cadrCount++;
 		else 
