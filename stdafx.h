@@ -64,6 +64,7 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui.hpp"
 #include <opencv2/ml/ml.hpp>
+#include<opencv/cvaux.h>
 
 
 #include <cmath>
