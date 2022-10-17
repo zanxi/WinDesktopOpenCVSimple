@@ -1,33 +1,41 @@
 {
     "version": "4.5.7",
-    "flags": {},
+    "flags": "",
     "shapes": [
         {
             "label": "4.1.1 Движение прямо",
             "points": [
                 [
-                    1004,
-                    148
+                    "1004",
+                    "148"
                 ],
                 [
-                    1024,
-                    31
+                    "1024",
+                    "31"
                 ]
             ],
-            "group_id": null,
+            "group_id": "null",
             "shape_type": "rectangle",
             "flags": {
                 "инструмент": "НС",
                 "тип НС": "YOLOv3",
-                "достоверность": 0.369140625,
-                "класс объекта": 97,
+                "достоверность": "0.369140625",
+                "класс объекта": "97",
                 "веса НС": "config_train\\Signs_314_1024_new_train_100\\train_2021_12_10__21_49_03\\weights\\best.pt",
                 "классификатор": "дорожные знаки"
             }
-        }
+        },
+        [
+            {
+                "label": "",
+                "points": "",
+                "shape_type": "polygon",
+                "group_id": "null"
+            }
+        ]
     ],
-    "imagePath": null,
-    "imageData": null,
-    "imageHeight": 1024,
-    "imageWidth": 768
+    "imagePath": "null",
+    "imageData": "null",
+    "imageHeight": "1024",
+    "imageWidth": "768"
 }

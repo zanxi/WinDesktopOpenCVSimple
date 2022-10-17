@@ -233,42 +233,62 @@ bool InsertJsonSquare(int numcadr, const vector<vector<cv::Point> >& squares)
     //stringstream stream(newobj_fileName);
     //stringstream stream(str);
     ptree strTree;
+
+    string fileCadr = string(".\\json\\") + string("test_") + to_string(numcadr) + string(".json");
+    read_json(fileCadr, strTree);
+
     /*try {
         read_json(stream, strTree);
     }
+
     catch (boost::property_tree::ptree_error& e) {
         std::cerr << e.what() << std::endl;
         return false;
     }*/
-    ptree shape_points;
-    ptree shape;
-    ptree array1, array2, array3;
-    shape.put("label", "null");
+    ptree shape_elem, shape_points_arr;
+    ptree shape_arr, root_shape;
+    ptree array2, array3;
+    
+    shape_elem.put("label", "");
 
+    ptree children;
+    ptree child2, child3;
+    //children.put("label", "");
     for (size_t i = 0; i < squares.size(); i++)
     {
+        ptree child1;
         const cv::Point* p = &squares[i][0];
-
         int n = (int)squares[i].size();
-        if (p->x > 3 && p->y > 3) array1.put(to_string(p->x), to_string(p->y));        
+        if (p->x > 3 && p->y > 3) {
+            child1.put(to_string(p->x), to_string(p->y));
+            //shape_points_arr.push_back(make_pair("", array));
+            children.push_back(std::make_pair("", child1));
+        }
     }
-    //array1.put(to_string(rect.br().x), to_string(rect.br().y));
-    //array2.put(to_string(rect.tl().x), to_string(rect.tl().y));
+       
+    shape_arr.put("label", "");
+    shape_arr.add_child("points", children);
+    shape_arr.put("shape_type", "polygon");
+    shape_arr.put("group_id", "null");
 
+    shape_points_arr.push_back(std::make_pair("", shape_arr));
 
-    shape_points.push_back(make_pair("", array1));
-    shape_points.push_back(make_pair("", array2));
+    //strTree.add_child("shapes", shape_points_arr);
 
-    shape.put("shape_type", "polygon");
-    shape.put("group_id", "null");
-    shape.put_child("Points", shape_points);
+    //ptree::value_type framePair2 = strTree.get_child("shapes");
+    strTree.get_child("shapes").push_back(std::make_pair("", shape_points_arr));
 
-    strTree.put_child("shape", shape);
-    //stringstream s;
-    //write_json(string(".\\json\\") + "qwe.json", strTree);
-    write_json(string(".\\json\\") + string("test_")+to_string(numcadr) + string(".json"), strTree);
-    //write_json(string("test_") + to_string(numcadr) + string(".json"), strTree);
-    //string outstr = s.str();
+    /*BOOST_FOREACH(ptree::value_type & framePair2, strTree.get_child("shapes")) {
+        auto id = framePair2.second.get_optional<std::string>("id");
+        if (id && !id->compare("stackoverflow")) {
+            std::cout << framePair2.second.get<std::string>("id") << std::endl;
+            std::cout << framePair2.second.get<std::string>("visible") << std::endl;
+            framePair2.second.put<std::string>("visible", "false");
+            std::cout << framePair2.second.get<std::string>("visible") << std::endl;
+        }
+    }*/
+
+    write_json(fileCadr, strTree);    
     return true;
 }
 

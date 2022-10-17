@@ -29,7 +29,7 @@ public:
 	    DAV * m_VideoDav;
 		int cadrCount=1;
 
-		std::map<int, std::vector<cv::Point>> naborCadrs;
+		std::map<int, std::vector< std::vector<cv::Point>>> naborCadrs;
 		std::vector<int> numCadrs;
 		int numcalccadrCount = 1;
 

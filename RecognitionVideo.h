@@ -44,48 +44,6 @@ double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0)
 	return (dx1 * dx2 + dy1 * dy2) / sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2) + 1e-10);
 }
 
-//void (std::vector<std::vector<cv::Point> >)findSquaresInImage:(cv::Mat)_image
-//{
-//	std::vector<std::vector<cv::Point> > squares;
-//	cv::Mat pyr, timg, gray0(_image.size(), CV_8U), gray;
-//	int thresh = 50, N = 11;
-//	cv::pyrDown(_image, pyr, cv::Size(_image.cols / 2, _image.rows / 2));
-//	cv::pyrUp(pyr, timg, _image.size());
-//	std::vector<std::vector<cv::Point> > contours;
-//	for (int c = 0; c < 3; c++) {
-//		int ch[] = { c, 0 };
-//		mixChannels(&timg, 1, &gray0, 1, ch, 1);
-//		for (int l = 0; l < N; l++) {
-//			if (l == 0) {
-//				cv::Canny(gray0, gray, 0, thresh, 5);
-//				cv::dilate(gray, gray, cv::Mat(), cv::Point(-1, -1));
-//			}
-//			else {
-//				gray = gray0 >= (l + 1) * 255 / N;
-//			}
-//			cv::findContours(gray, contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-//			std::vector<cv::Point> approx;
-//			for (size_t i = 0; i < contours.size(); i++)
-//			{
-//				cv::approxPolyDP(cv::Mat(contours[i]), approx, arcLength(cv::Mat(contours[i]), true) * 0.02, true);
-//				if (approx.size() == 4 && fabs(contourArea(cv::Mat(approx))) > 1000 && cv::isContourConvex(cv::Mat(approx))) {
-//					double maxCosine = 0;
-//
-//					for (int j = 2; j < 5; j++)
-//					{
-//						double cosine = fabs(angle(approx[j % 4], approx[j - 2], approx[j - 1]));
-//						maxCosine = MAX(maxCosine, cosine);
-//					}
-//
-//					if (maxCosine < 0.3) {
-//						squares.push_back(approx);
-//					}
-//				}
-//			}
-//		}
-//	}
-//	return squares;
-//}
 
 void find_squares(cv::Mat& image, std::vector<std::vector<cv::Point> >& squares)
 {
@@ -161,8 +119,8 @@ void CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv::M
 {
 	//return;
 	
-
-	for (int i = 0; i < squares.size(); i++) {
+	for (int i = 0; i < squares.size(); i++)
+	{
 		// draw contour
 		//cv::drawContours(image, squares, i, cv::Scalar(255, 0, 0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
 
@@ -171,12 +129,12 @@ void CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv::M
 		cv::rectangle(image, rect.tl(), rect.br(), cv::Scalar(0, 255, 0), 2, 8, 0);
 
 		// draw rotated rect
-		cv::RotatedRect minRect = minAreaRect(cv::Mat(squares[i]));
-		cv::Point2f rect_points[4];
-		minRect.points(rect_points);
-		for (int j = 0; j < 4; j++) {
-			//cv::line(image, rect_points[j], rect_points[(j + 1) % 4], cv::Scalar(0, 0, 255), 1, 8); // blue
-		}
+		//cv::RotatedRect minRect = minAreaRect(cv::Mat(squares[i]));
+		//cv::Point2f rect_points[4];
+		//minRect.points(rect_points);
+		//for (int j = 0; j < 4; j++) {
+		//	//cv::line(image, rect_points[j], rect_points[(j + 1) % 4], cv::Scalar(0, 0, 255), 1, 8); // blue
+		//}
 	}
 
 	//vector<vector<cv::Point> > contours;
@@ -238,7 +196,7 @@ bool r_center(float radius, int cx, int cy, std::vector<std::vector<cv::Point> >
 			r += (cx - m[i].x) * (cx - m[i].x) + (cy - m[i].y) * (cy - m[i].y);
 	}
 	//if (radius > 30 && radius < 40 && 40 < sqrt(r) && sqrt(r) < 100) return true;
-	if ((50 < sqrt(r) && sqrt(r) < 140)) return true;
+	if ((50 < sqrt(r) && sqrt(r) < 470)) return true;
 
 	return false;
 }
@@ -293,20 +251,6 @@ int Bound_circle(int numCadr, cv::Mat& bgr_image,  std::vector<std::vector<cv::P
 			cv::Point(center.x - 70, center.y-170) };
 		setLabel(bgr_image, "Circle Road sign", coordTectCapture);
 	}
-
-	// Show images
-	/*cv::namedWindow("Threshold lower image", cv::WINDOW_AUTOSIZE);
-	cv::imshow("Threshold lower image", lower_red_hue_range);
-	cv::namedWindow("Threshold upper image", cv::WINDOW_AUTOSIZE);
-	cv::imshow("Threshold upper image", upper_red_hue_range);
-	cv::namedWindow("Combined threshold images", cv::WINDOW_AUTOSIZE);
-	cv::imshow("Combined threshold images", red_hue_image);
-	cv::namedWindow("Detected red circles on the input image", cv::WINDOW_AUTOSIZE);
-	cv::imshow("Detected red circles on the input image", orig_image);
-
-	cv::waitKey(0);*/
-
-
 	return 0;
 }
 

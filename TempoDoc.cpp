@@ -245,16 +245,44 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		
 		numCadrs = {1,2, 3,4, 5,6, 21,46,47,48};
 
-		naborCadrs[1] = { cv::Point(584, 338), cv::Point(634, 378) };
-		naborCadrs[2] = { cv::Point(622,438), cv::Point(644,394) }; // Test_2.json
-		naborCadrs[21] = { cv::Point(339,4), cv::Point(651,149) }, // Test_21.json
-		naborCadrs[3] = { cv::Point(636,357), cv::Point(688,302) }; // Test_3.json
-		naborCadrs[4] = { cv::Point(684,339), cv::Point(753,266) }; // Test_4.json
-		naborCadrs[46] = { cv::Point(664,339), cv::Point(731,269) }, // Test_46.json
-		naborCadrs[47] = { cv::Point(736,210), cv::Point(826,305) }; // Test_47.json
-		naborCadrs[5] = { cv::Point(777,195), cv::Point(876,302) }; // Test_5.json
-		naborCadrs[6] = { cv::Point(1004,148), cv::Point(1024,31) }; // Test_6.json
-		naborCadrs[48] = { cv::Point(777, 195), cv::Point(876, 302) }; // Test_48.json
+		naborCadrs[1] = { 
+			{ cv::Point(584, 338), cv::Point(634, 378) },			
+			//{ cv::Point(), cv::Point() },
+		};
+		naborCadrs[2] = { 
+			{ cv::Point(622,438), cv::Point(644,394) },			
+			//{ cv::Point(), cv::Point() },
+		}; // Test_2.json		
+		naborCadrs[3] = { 
+			{ cv::Point(636,357), cv::Point(688,302) },
+		    { cv::Point(636, 357), cv::Point(688, 302) },
+			{ cv::Point(638, 388), cv::Point(692, 358) },
+		}; // Test_3.json
+		naborCadrs[4] = { 
+			{ cv::Point(684,339), cv::Point(753,266) },
+			{ cv::Point(687, 379), cv::Point(758, 340) },
+			{ cv::Point(708, 458), cv::Point(746, 381) },
+		}; // Test_4.json
+		naborCadrs[5] = {
+			{ cv::Point(777,195), cv::Point(876,302)},
+		    { cv::Point(823, 369), cv::Point(879, 486) },		    
+		}; // Test_5.json
+		naborCadrs[6] = {
+			{ cv::Point(1004,148), cv::Point(1024,31) },			
+		}; // Test_6.jsonnaborCadrs[46] = { { cv::Point(664,339), cv::Point(731,269) } }; // Test_46.json
+		naborCadrs[21] = { 
+			{ cv::Point(339,4), cv::Point(651,149) },			
+		}; // Test_21.json
+		naborCadrs[47] = { 
+			{ cv::Point(736,210), cv::Point(826,305) }, 
+			{ cv::Point(774,361), cv::Point(827,464)},
+			{cv::Point(743,	305), cv::Point(836, 357)} 
+		}; // Test_47.json		
+		naborCadrs[48] = { 
+			{ cv::Point(886,78), cv::Point(1022, 226) },
+			{ cv::Point(985, 321), cv::Point(1023, 511) },
+			{ cv::Point(922, 222), cv::Point(1022, 310) }
+		}; // Test_48.json
 
 		//Calccadr;
 
@@ -376,11 +404,11 @@ void CTempoDoc::ShowNextFrameVpered()
 		{			
 			m_Mat = m_VideoDav->cadr(cadrCount);						
 			int nn = (cadrCount % (numCadrs.size() - 1));
-			debugSquares({ naborCadrs[numCadrs[nn]] }, m_Mat);
+			debugSquares( naborCadrs[numCadrs[nn]] , m_Mat);
 
 			/**/
 
-			Bound1(cadrCount,{ naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
+			Bound1(cadrCount, naborCadrs[numCadrs[nn]] , m_Mat); // рисуем оболочку знака
 
 
 
@@ -417,9 +445,9 @@ void CTempoDoc::ShowNextFrame()
 		m_Mat = m_VideoDav->cadr(cadrCount);
 
 		int nn = (cadrCount % (numCadrs.size() - 1));
-		debugSquares({ naborCadrs[numCadrs[nn]]}, m_Mat);
+		debugSquares( naborCadrs[numCadrs[nn]], m_Mat);
 
-		Bound1(numcalccadrCount, { naborCadrs[numCadrs[nn]] }, m_Mat); // рисуем оболочку знака
+		Bound1(numcalccadrCount,  naborCadrs[numCadrs[nn]] , m_Mat); // рисуем оболочку знака
 				
 		if (cadrCount < m_VideoDav->CountKadr-1) cadrCount++;
 		else 
