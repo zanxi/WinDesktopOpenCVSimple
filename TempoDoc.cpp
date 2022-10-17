@@ -260,8 +260,7 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 		m_Mat = m_VideoDav->cadr(cadrCount);
 		SetupBitmapInfo(m_Mat);
-	    //::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 1000 / (int)10, 0);
-		
+	    //::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 1000 / (int)10, 0);		
 	}
 	
 	{

@@ -204,22 +204,70 @@ bool InsertJsonRect(cv::Rect rect, int numcadr)
         std::cerr << e.what() << std::endl;
         return false;
     }*/
-    ptree subject_info;
+    ptree shape_points;
+    ptree shape;
     ptree array1, array2, array3;
-    strTree.put("label", "null");
+    shape.put("label", "null");
     
     array1.put(to_string(rect.br().x), to_string(rect.br().y));
     array2.put(to_string(rect.tl().x), to_string(rect.tl().y));
-    subject_info.push_back(make_pair("", array1));
-    subject_info.push_back(make_pair("", array2));
+    shape_points.push_back(make_pair("", array1));
+    shape_points.push_back(make_pair("", array2));
     
-    strTree.put("shape_type", "polygon");
-    strTree.put("group_id", "null");
-
-    strTree.put_child("Points", subject_info);
+    shape.put("shape_type", "polygon");
+    shape.put("group_id", "null");
+    shape.put_child("Points", shape_points);
+    
+    strTree.put_child("shape", shape);
     //stringstream s;
     //write_json(string(".\\json\\") + "qwe.json", strTree);
-    write_json(string("cadr_")+to_string(numcadr) + string(".json"), strTree);
+    //write_json(string(".\\json\\") + string("test_")+to_string(numcadr) + string(".json"), strTree);
+    write_json(string("test_") + to_string(numcadr) + string(".json"), strTree);
+    //string outstr = s.str();
+    return true;
+}
+
+bool InsertJsonSquare(int numcadr, const vector<vector<cv::Point> >& squares)
+{
+    //string str = "{\"label\":0}";
+    //stringstream stream(newobj_fileName);
+    //stringstream stream(str);
+    ptree strTree;
+    /*try {
+        read_json(stream, strTree);
+    }
+    catch (boost::property_tree::ptree_error& e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }*/
+    ptree shape_points;
+    ptree shape;
+    ptree array1, array2, array3;
+    shape.put("label", "null");
+
+    for (size_t i = 0; i < squares.size(); i++)
+    {
+        const cv::Point* p = &squares[i][0];
+
+        int n = (int)squares[i].size();
+        if (p->x > 3 && p->y > 3) array1.put(to_string(p->x), to_string(p->y));        
+    }
+    //array1.put(to_string(rect.br().x), to_string(rect.br().y));
+    //array2.put(to_string(rect.tl().x), to_string(rect.tl().y));
+
+
+    shape_points.push_back(make_pair("", array1));
+    shape_points.push_back(make_pair("", array2));
+
+    shape.put("shape_type", "polygon");
+    shape.put("group_id", "null");
+    shape.put_child("Points", shape_points);
+
+    strTree.put_child("shape", shape);
+    //stringstream s;
+    //write_json(string(".\\json\\") + "qwe.json", strTree);
+    write_json(string(".\\json\\") + string("test_")+to_string(numcadr) + string(".json"), strTree);
+    //write_json(string("test_") + to_string(numcadr) + string(".json"), strTree);
     //string outstr = s.str();
     return true;
 }
