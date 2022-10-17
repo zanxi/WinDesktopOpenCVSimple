@@ -73,7 +73,6 @@ public:
 protected:
 	void ResizeMat(cv::Mat& mat);
 	void SetupBitmapInfo(cv::Mat& mat);
-	void debugSquares(std::vector<std::vector<cv::Point> > squares, cv::Mat image);
 	   
 
 // Generated message map functions

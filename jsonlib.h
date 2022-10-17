@@ -218,12 +218,8 @@ bool InsertJsonRect(cv::Rect rect, int numcadr)
     shape.put("group_id", "null");
     shape.put_child("Points", shape_points);
     
-    strTree.put_child("shape", shape);
-    //stringstream s;
-    //write_json(string(".\\json\\") + "qwe.json", strTree);
-    //write_json(string(".\\json\\") + string("test_")+to_string(numcadr) + string(".json"), strTree);
-    write_json(string("test_") + to_string(numcadr) + string(".json"), strTree);
-    //string outstr = s.str();
+    strTree.put_child("shape", shape);    
+    write_json(string("test_") + to_string(numcadr) + string(".json"), strTree);    
     return true;
 }
 

@@ -31,6 +31,7 @@
     <None Include="res\Toolbar256.bmp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tempo.h">
@@ -58,6 +59,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dav_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Read_File_From_Directory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StructCadr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StructInfoFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CadrJson.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="jsonlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RecognitionVideo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

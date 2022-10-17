@@ -115,7 +115,7 @@ void find_squares(cv::Mat& image, std::vector<std::vector<cv::Point> >& squares)
 	}
 }
 
-void CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv::Mat image)
+void debugSquares(std::vector<std::vector<cv::Point> > squares, cv::Mat image)
 {
 	//return;
 	
@@ -128,25 +128,8 @@ void CTempoDoc::debugSquares(std::vector<std::vector<cv::Point> > squares, cv::M
 		cv::Rect rect = boundingRect(cv::Mat(squares[i]));
 		cv::rectangle(image, rect.tl(), rect.br(), cv::Scalar(0, 255, 0), 2, 8, 0);
 
-		// draw rotated rect
-		//cv::RotatedRect minRect = minAreaRect(cv::Mat(squares[i]));
-		//cv::Point2f rect_points[4];
-		//minRect.points(rect_points);
-		//for (int j = 0; j < 4; j++) {
-		//	//cv::line(image, rect_points[j], rect_points[(j + 1) % 4], cv::Scalar(0, 0, 255), 1, 8); // blue
-		//}
 	}
-
-	//vector<vector<cv::Point> > contours;
-
-	//findContours(image, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
-	//cv::drawContours(image, contours, 0, cv::Scalar(255, 0, 0), 1, 8, std::vector<cv::Vec4i>(), 0, cv::Point());
-	////cv::RotatedRect rotRecs[contours.size()];
-	//for (int i = 0; i < contours.size(); i++) {
-	//	//rotRecs[i] = fitEllipse(contours[i]);
-	//}
-
-	//return image;
+	
 }
 
 
@@ -196,7 +179,7 @@ bool r_center(float radius, int cx, int cy, std::vector<std::vector<cv::Point> >
 			r += (cx - m[i].x) * (cx - m[i].x) + (cy - m[i].y) * (cy - m[i].y);
 	}
 	//if (radius > 30 && radius < 40 && 40 < sqrt(r) && sqrt(r) < 100) return true;
-	if ((50 < sqrt(r) && sqrt(r) < 470)) return true;
+	if ((10 < sqrt(r) && sqrt(r) < 470)) return true;
 
 	return false;
 }
@@ -204,6 +187,7 @@ bool r_center(float radius, int cx, int cy, std::vector<std::vector<cv::Point> >
 
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// детектирование окружностей
 int Bound_circle(int numCadr, cv::Mat& bgr_image,  std::vector<std::vector<cv::Point> > squares) {
 
 	cv::Mat orig_image = bgr_image.clone();
@@ -238,9 +222,9 @@ int Bound_circle(int numCadr, cv::Mat& bgr_image,  std::vector<std::vector<cv::P
 
 		//cv::circle(orig_image, center, radius, cv::Scalar(0, 255, 0), 5);
 
-		if (!r_center(radius, center.x, center.y, squares))
+		//if (!r_center(radius, center.x, center.y, squares))
 		{
-			continue;
+			//continue;
 		}
 
 
@@ -361,7 +345,6 @@ void findSquares(const cv::Mat& image, vector<vector<cv::Point> >& squares)
 	}
 }
 
-
 // the function draws all the squares in the image
 void drawSquares(cv::Mat& image, const vector<vector<cv::Point> >& squares)
 {
@@ -379,7 +362,7 @@ void drawSquares(cv::Mat& image, const vector<vector<cv::Point> >& squares)
 
 	//imshow(wndname, image);
 }
-
+// детектирование прямоугольных границ
 void Bound_rect(int numcadr, cv::Mat& image)
 {
 	//help();

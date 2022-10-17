@@ -273,6 +273,11 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		naborCadrs[21] = { 
 			{ cv::Point(339,4), cv::Point(651,149) },			
 		}; // Test_21.json
+		naborCadrs[46] = {
+			{ cv::Point(664,339), cv::Point(731, 269) },
+			{ cv::Point(666,376), cv::Point(733,340) },
+			{ cv::Point(686, 447), cv::Point(723, 377) },
+		}; // Test_47.json		
 		naborCadrs[47] = { 
 			{ cv::Point(736,210), cv::Point(826,305) }, 
 			{ cv::Point(774,361), cv::Point(827,464)},
@@ -288,6 +293,9 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 		m_Mat = m_VideoDav->cadr(cadrCount);
 		SetupBitmapInfo(m_Mat);
+		numcalccadrCount = 0;
+		debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
+		Bound1(numCadrs[numcalccadrCount], { naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 	    //::PostMessage(pView->GetSafeHwnd(), WMU_SETFPS, 1000 / (int)10, 0);		
 	}
 	
@@ -374,22 +382,26 @@ void CTempoDoc::ShowNextFrameNazad()
 // --- >>> ---
 void CTempoDoc::ShowNextFrameVpered_Jump()
 {
+	if (numcalccadrCount < numCadrs.size() - 1)numcalccadrCount++;
+	else numcalccadrCount = numCadrs.size()-1;
+
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);	
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
-
 	Bound1(numCadrs[numcalccadrCount],{ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 
-	if (numcalccadrCount < numCadrs.size()-1)numcalccadrCount++;	
 }
 // --- <<< ---
 void CTempoDoc::ShowNextFrameNazad_Jump()
 {
+	if (numcalccadrCount - 1 >= 0)numcalccadrCount--;
+	else numcalccadrCount = 1;
+
 	m_Mat = m_VideoDav->cadr(numCadrs[numcalccadrCount]);
 	debugSquares({ naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat);
 
 	Bound1(numCadrs[numcalccadrCount], { naborCadrs[numCadrs[numcalccadrCount]] }, m_Mat); // рисуем оболочку знака
 
-	if (numcalccadrCount >1)numcalccadrCount--;	
+	
 }
 
 // --- > ---

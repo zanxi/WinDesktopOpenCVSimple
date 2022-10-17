@@ -237,6 +237,8 @@ void CTempoView::OnDraw(CDC* pDC)
 	pDC->BitBlt(0, 0, rectClient.Width(), rectClient.Height(), &memDC, 0, 0, SRCCOPY);
 	memDC.SelectObject(pOldBitmap);
 	bmpMem.DeleteObject();
+
+	m_Edit_info_num_cadr.SetWindowTextA(std::to_string(pDoc->numCadrs[pDoc->numcalccadrCount]).c_str());
 }
 
 // CTempoView printing
