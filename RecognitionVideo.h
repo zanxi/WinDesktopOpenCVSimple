@@ -2,6 +2,10 @@
 
 #include "stdafx.h"
 #include "jsonlib.h"
+#include "Recognition2.h"
+#include "Recognition3.h"
+//#include "Recognition4.h"
+
 
 // Функция детектирования знаков 
 // подбор по размеру и наименьшему расстоянию до точек прямоугольника
@@ -60,6 +64,14 @@ void Bound17(cv::Mat& img);
 void loop(cv::Mat& img);
 void Bound18(cv::Mat& img);
 void Bound19(cv::Mat& img);
+void Bound20(cv::Mat& img);
+void Bound21(cv::Mat& img);
+void Bound25(cv::Mat& img);
+
+void Bound2(cv::Mat& src);
+
+void Bound26(cv::Mat& img);
+void Bound30(cv::Mat& img);
 
 
 void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour);
@@ -71,8 +83,14 @@ void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& cont
 void Bound1(int numCadr, std::vector<std::vector<cv::Point> > squares, cv::Mat& src_mat)
 {
 	Bound8(src_mat);
-	Bound19(src_mat);
+	//Bound21(src_mat);
 	//loop(src_mat);
+	//Bound26(src_mat);
+	//scan(src_mat);
+	
+	//Bound32(src_mat);
+
+	Bound19(src_mat);
 	
 	
 	return;
@@ -126,11 +144,11 @@ void Bound1(int numCadr, std::vector<std::vector<cv::Point> > squares, cv::Mat& 
 
 		//draw contour property value at the contour center.
 		char buffer[64] = { 0 };
-		//sprintf(buffer, "Area: %.2lf", area);
-		//putText(contour_mat, buffer, center, cv::FONT_HERSHEY_SIMPLEX, .6, cv::Scalar(0), 1);
+		sprintf(buffer, "Area: %.2lf", area);
+		putText(contour_mat, buffer, center, cv::FONT_HERSHEY_SIMPLEX, .6, cv::Scalar(0), 1);
 
-		//sprintf(buffer, "Length: %.2lf", length);
-		//putText(contour_mat, buffer, cv::Point(center.x, center.y + 20), cv::FONT_HERSHEY_SIMPLEX, .6, cv::Scalar(0), 1);
+		sprintf(buffer, "Length: %.2lf", length);
+		putText(contour_mat, buffer, cv::Point(center.x, center.y + 20), cv::FONT_HERSHEY_SIMPLEX, .6, cv::Scalar(0), 1);
 
 	}
 
@@ -431,7 +449,7 @@ static double angle2(cv::Point pt1, cv::Point pt2, cv::Point pt0)
 
 void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour)
 {
-	//return;
+	return;
 	//if (label != "CIR")return;
 
 	int fontface = cv::FONT_HERSHEY_SIMPLEX;
@@ -450,7 +468,7 @@ void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& cont
 
 void Bound2(cv::Mat& src)
 {
-	return;
+	//return;
 	//cv::Mat src = cv::imread("polygon.png");
 	//cv::Mat src = cv::imread("assets/basic-shapes-2.png");
 
@@ -485,32 +503,47 @@ void Bound2(cv::Mat& src)
 		if (approx.size() == 3)
 		{
 			setLabel(src, "TRI", contours[i]);    // Triangles
+			cv::Scalar red(0, 110, 255);
+			cv::drawContours(src, contours[i], 6, red, 5);
 		}
 		else if (approx.size() >= 4 && approx.size() <= 6)
 		{
 			// Number of vertices of polygonal curve
 			int vtc = approx.size();
 
-			// Get the cosines of all corners
+			// Get the degree (in cosines) of all corners
 			std::vector<double> cos;
 			for (int j = 2; j < vtc + 1; j++)
 				cos.push_back(angle(approx[j % vtc], approx[j - 2], approx[j - 1]));
 
-			// Sort ascending the cosine values
+			// Sort ascending the corner degree values
 			std::sort(cos.begin(), cos.end());
 
-			// Get the lowest and the highest cosine
+			// Get the lowest and the highest degree
 			double mincos = cos.front();
 			double maxcos = cos.back();
+
+			/*double eps = 0.1 * arcLength(contours[0], true);
+			approxPolyDP(contours[i], approx, 1, true);
+			vector<vector<cv::Point> > approx_t;
+			approx_t.push_back(approx);
+			cv::Scalar red(0, 110, 255);
+			cv::drawContours(src, approx_t, 6, red, 5);*/
 
 			// Use the degrees obtained above and the number of vertices
 			// to determine the shape of the contour
 			if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
-				setLabel(src, "RECT", contours[i]);
+			{
+				// Detect rectangle or square
+				cv::Rect r = cv::boundingRect(contours[i]);
+				double ratio = std::abs(1 - (double)r.width / r.height);
+
+				setLabel(dst, ratio <= 0.02 ? "SQU" : "RECT", contours[i]);
+			}
 			else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
-				setLabel(src, "PENTA", contours[i]);
+				setLabel(dst, "PENTA", contours[i]);
 			else if (vtc == 6 && mincos >= -0.55 && maxcos <= -0.45)
-				setLabel(src, "HEXA", contours[i]);
+				setLabel(dst, "HEXA", contours[i]);
 		}
 		else
 		{
@@ -522,9 +555,9 @@ void Bound2(cv::Mat& src)
 			if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
 				std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
 			{
-				cv::Scalar red(0, 0, 255);
-				cv::drawContours(src, contours[i], radius, red, 2);
-				setLabel(src, "CIR", contours[i]);
+				//cv::Scalar red(0, 0, 255);
+				//cv::drawContours(src, contours[i], radius, red, 2);
+				//setLabel(src, "CIR", contours[i]);
 			}
 		}
 	}
@@ -2595,7 +2628,7 @@ void showImgContours(cv::Mat& threshedimg, cv::Mat& result, COLOR color)
 
 // ************************************************************
 
-int thresh_ = 50, N = 5;
+int thresh_ = 50, N = 7;
 const char* wndname = "Square Detection Demo";
 
 // helper function:
@@ -2625,8 +2658,9 @@ void findSquares(const cv::Mat& image, vector<vector<cv::Point> >& squares)
 
 		// blur will enhance edge detection
 	cv::Mat timg(image);
-	cv::medianBlur(image, timg, 9);
-	cv::Mat gray0(timg.size(), CV_8U), gray;
+	//cv::medianBlur(image, timg, 9);
+	//cv::Mat gray0(timg.size(), CV_8U), gray;
+	cv::Mat gray0(image.size(), CV_8U), gray;
 
 	vector<vector<cv::Point> > contours;
 
@@ -2710,7 +2744,7 @@ void drawSquares(cv::Mat& image, const vector<vector<cv::Point> >& squares)
 		int n = (int)squares[i].size();
 		//dont detect the border
 		if (p->x > 3 && p->y > 3)
-			polylines(image, &p, &n, 1, true, cv::Scalar(0, 255, 0), 3, cv::LINE_AA);
+			polylines(image, &p, &n, 1, true, cv::Scalar(0, 255, 0), 1, cv::LINE_AA);
 	}
 
 	//imshow(wndname, image);
@@ -2741,4 +2775,218 @@ void Bound19(cv::Mat& image)
 	}
 
 	return;
+}
+
+void Bound20(cv::Mat& input)
+{
+	//cv::Mat input = cv::imread("../inputData/rectangles.png");
+
+	cv::Mat gray;
+	cv::cvtColor(input, gray, CV_BGR2GRAY);
+
+	// since your image has compression artifacts, we have to threshold the image
+	int threshold = 200;
+	cv::Mat mask = gray > threshold;
+
+	//cv::imshow("mask", mask);
+
+	// extract contours
+	std::vector<std::vector<cv::Point> > contours;
+	cv::findContours(mask, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+
+	for (int i = 0; i < contours.size(); ++i)
+	{
+		// fit bounding rectangle around contour
+		cv::RotatedRect rotatedRect = cv::minAreaRect(contours[i]);
+
+		// read points and angle
+		cv::Point2f rect_points[4];
+		rotatedRect.points(rect_points);
+
+		float  angle = rotatedRect.angle; // angle
+
+		// read center of rotated rect
+		cv::Point2f center = rotatedRect.center; // center
+
+		float a = sqrt((rect_points[0].x - rect_points[1].x) * (rect_points[0].x - rect_points[1].x) +
+			(rect_points[0].y - rect_points[1].y) * (rect_points[0].y - rect_points[1].y));
+		float b = sqrt((rect_points[0].x - rect_points[2].x) * (rect_points[0].x - rect_points[2].x) +
+			(rect_points[0].y - rect_points[2].y) * (rect_points[0].y - rect_points[2].y));
+		float S = a * b;
+		if (angle < 88)continue;
+		if (S < 1000)continue;
+
+		// draw rotated rect
+		for (unsigned int j = 0; j < 4; ++j)
+			cv::line(input, rect_points[j], rect_points[(j + 1) % 4], cv::Scalar(0, 255, 0));
+
+		
+
+
+		// draw center and print text
+		std::stringstream ss;   ss << angle; // convert float to string
+		cv::circle(input, center, 5, cv::Scalar(0, 255, 0)); // draw center
+		cv::putText(input, ss.str(), center + cv::Point2f(-25, 25), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, cv::Scalar(255, 0, 255)); // print angle
+	}
+}
+
+// ********************************************************
+
+#define HIGH_CANNY_THRESH  255
+#define CANNY_KERNEL_SIZE  3
+#define       FRAME_WIDTH  640
+#define      FRAME_HEIGHT  480
+
+#define    DISPLAY_IMAGES  true
+
+using namespace std;
+using namespace cv;
+
+void createTrackbarsForHSVSel();
+void morphOps(Mat& thresh);
+
+int LOW_H = 0;
+int HIGH_H = 255;
+int LOW_S = 0;
+int HIGH_S = 255;
+int LOW_V = 0;
+int HIGH_V = 255;
+
+int LOW_THRESHOLD = 0;
+int HIGH_THRESHOLD = 100;
+
+int     CORNER_THRESH = 200;
+int MAX_CORNER_THRESH = 255;
+
+void Bound21(cv::Mat& src)
+{
+
+	Mat hsvSpace, threshold, edges;
+
+	vector<vector<Point> > contours;   // Vectors for the contours storage
+	vector<Vec4i> hierarchy;
+
+	//createTrackbarsForHSVSel();   // create trackbars for the HSV palette
+	//createTrackbar("Min Threshold", "Trackbars", &LOW_THRESHOLD, HIGH_THRESHOLD);
+	//createTrackbar("Max Threshold", "Trackbars", &HIGH_THRESHOLD, HIGH_THRESHOLD);
+
+	//VideoCapture capture;
+	//capture.open(0);
+
+	//printf("Starting to capture from camera0:\nisOpened = %d\n", capture.isOpened());
+
+	//capture.set(CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
+	//capture.set(CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT);
+
+	//while (1)   // loop exectues as long as the user doesn't press ESC, q or Q
+	{
+		//capture.read(src);   // read from camera
+		cvtColor(src, hsvSpace, CV_BGR2HSV);   // RGB to HSV color space transformation
+		// create a binary such that 1s are between Scalar(min_, min_, min_) and Scalar(max_, max_, max_)
+		inRange(hsvSpace, Scalar(LOW_H, LOW_S, LOW_V), Scalar(HIGH_H, HIGH_S, HIGH_V), threshold);
+		//morphOps(threshold);   // morphological operations: they allow to close the 'hole' and delete the 'dots'
+		morphOps(hsvSpace);   // morphological operations: they allow to close the 'hole' and delete the 'dots'
+
+		// threshold now contains the binary that only displays one colour (if the trackbars are set correctly)
+
+		// Apply Gaussian blurring and Canny edge algorithm for the edge detection
+		GaussianBlur(threshold, threshold, Size(3, 3), 0, 0);   // Kernel = 3x3, Sigmas are calculated automatically (see 'getGaussianKernel()')
+		Canny(threshold, edges, LOW_THRESHOLD, HIGH_THRESHOLD);
+
+		/*
+		   Algorithm that approximates the edges of the figure to a rectangle.
+		   After that it needs to be able to calculate the rectangle position and orientation
+		   (will something like RotatedRect be useful?)
+		*/
+
+//#if DISPLAY_IMAGES == true
+//		// Show images
+//		imshow("Camera feed", src);
+//		imshow("Thresholded", threshold);
+//		imshow("Edges", edges);
+//#endif
+//
+//		if ((char)waitKey(30) == 'q')
+//			break;
+	}
+
+	return;
+}
+
+void createTrackbarsForHSVSel()
+{
+	return;
+	namedWindow("Trackbars", WINDOW_AUTOSIZE);
+
+	createTrackbar("Low  hue", "Trackbars", &LOW_H, HIGH_H);
+	createTrackbar("High hue", "Trackbars", &HIGH_H, HIGH_H);
+	createTrackbar("Low  sat", "Trackbars", &LOW_S, HIGH_S);
+	createTrackbar("High sat", "Trackbars", &HIGH_S, HIGH_S);
+	createTrackbar("Low  val", "Trackbars", &LOW_V, HIGH_V);
+	createTrackbar("High val", "Trackbars", &HIGH_V, HIGH_V);
+
+	return;
+}
+
+void morphOps(Mat& thresh)
+{
+	// create structuring element that will be used to "dilate" and "erode" image.
+	// the element chosen here is a 3px by 3px rectangle.
+		// As a rule of thumb you want to dilate with larger element to make sure the object is nicely visible
+
+	erode(thresh, thresh, getStructuringElement(MORPH_RECT, Size(3, 3)));
+	dilate(thresh, thresh, getStructuringElement(MORPH_RECT, Size(3, 3)));
+
+	dilate(thresh, thresh, getStructuringElement(MORPH_RECT, Size(3, 3)));
+	erode(thresh, thresh, getStructuringElement(MORPH_RECT, Size(3, 3)));
+
+	return;
+}
+
+//***********************************************
+
+void Bound25(Mat& src_mat)
+{
+
+	cv::Mat gray_mat, canny_mat;
+	cv::Mat contour_mat;
+	//cv::Mat bounding_mat;
+
+	//1.Read image file & clone.
+	//src_mat = cv::imread(file_name);
+	contour_mat = src_mat.clone();
+	//bounding_mat = src_mat.clone();
+
+	//2. Convert to gray image and apply canny edge detection
+	cvtColor(src_mat, gray_mat, cv::COLOR_RGB2GRAY);
+	Canny(gray_mat, canny_mat, 30, 128, 3, false);
+
+	//3. Find & process the contours
+	//3.1 find contours on the edge image.
+	
+	//std::vector<std::vector<cv::Point> > contours;
+	//findContours(canny_mat, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+
+	std::vector<std::vector<cv::Point> > contours;
+	findContours(canny_mat, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+	//cv::findContours(src, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+
+	//Mat drawing = Mat::zeros(src.size(), CV_8UC3);
+
+	double largest_area = 0;
+	std::vector<std::vector<cv::Point> > largest_contours;
+	
+	for (int i = 0; i < contours.size(); i++) {  // get the largest contour
+		float area = fabs(contourArea(contours[i]));
+		if (area >= largest_area) {
+			largest_area = area;
+			largest_contours.clear();
+			largest_contours.push_back(contours[i]);
+		}
+	}
+
+	if (largest_area >= 3500) {   // draw the largest contour if exceeded minimum largest area 
+		//drawContours(src_mat, largest_contours, -1, Scalar(0, 0, 255), 2);
+	}
 }
