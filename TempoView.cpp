@@ -9,6 +9,8 @@
 #include "Tempo.h"
 #endif
 
+
+
 #include "TempoDoc.h"
 #include "TempoView.h"
 
@@ -50,6 +52,54 @@ END_MESSAGE_MAP()
 CTempoView::CTempoView()
 	:m_dZoomFactor(1.0)
 {
+
+	Home = CPoint(1230, 100); End = CPoint(1800, 700);
+	//Create(NULL, "Computing the Multi-cliques of a Graph",
+		//WS_OVERLAPPEDWINDOW, CRect(0, 0, 1000, 800), NULL);
+	bNGraph.Create("New Graph", WS_CHILD | WS_VISIBLE |
+		BS_DEFPUSHBUTTON,
+		CRect(CPoint(Home.x, 30), CSize(180, 40)), this, IDC_NGRAPH);
+	bCompute.Create("Compute", WS_CHILD | WS_VISIBLE
+		| BS_DEFPUSHBUTTON, CRect(CPoint(Home.x + 200, 30),
+			CSize(180, 40)),
+		this, IDC_COMPUTE);
+	fArial.CreatePointFont(80, "Arial");
+	fVerdana.CreatePointFont(100, "Verdana");
+	int Color[] = { RGB(150,150,150),RGB(0,0,0),RGB(0,0,200),
+	 RGB(0,200,0),RGB(200,0,0),RGB(0,200,200),RGB(255,0,50) };
+	for (int i = 0; i <= 6; i++)
+	{
+		if (i == 0)
+			pColor[i].CreatePen(PS_SOLID, 1, Color[i]);
+		else
+			pColor[i].CreatePen(PS_SOLID, 3, Color[i]);
+	}
+
+	// init
+
+	int i, j;
+	double distance;
+	srand(time(0));
+	for (i = 1; i <= N; i++)
+	{
+		v[i].Home.x = Home.x + 20 + rand() % (End.x - Home.x - 50);
+		v[i].Home.y = Home.y + 20 + rand() % (End.y - Home.y - 50);
+		v[i].rct = CRect(CPoint(v[i].Home.x - 10, v[i].Home.y - 10), CSize
+		(25, 25));
+	}
+	//Computing the Maximum Clique 191
+		for (i = 1; i <= N; i++)
+		{
+			e[i][i].adj = 0;
+			for (j = i + 1; j <= N; j++)
+			{
+				distance = sqrt(pow(double(v[i].Home.x - v[j].Home.x), 2)
+					+ pow(double(v[i].Home.y - v[j].Home.y), 2));
+				e[i][j].adj = ((distance <= R) ? 1 : 0);
+				e[j][i].adj = e[i][j].adj;
+			}
+		}
+
 	// TODO: add construction code here
 }
 
@@ -65,18 +115,19 @@ int CTempoView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		return -1;
 	}
+	
 
-	m_Btn_Nazad.Create(_T(" -- < ---"), BS_PUSHBUTTON,
-		CRect(50, 50, 280, 100), this, IDC_BUTTON2);
-	m_Btn_Nazad.ShowWindow(SW_SHOW);
+	//m_Btn_Nazad.Create(_T(" -- < ---"), BS_PUSHBUTTON,
+	//	CRect(50, 50, 280, 100), this, IDC_BUTTON2);
+	////m_Btn_Nazad.ShowWindow(SW_SHOW);
 
-	m_Btn_vpered.Create(_T(" -- > ---"), BS_PUSHBUTTON,
-		CRect(50, 100, 280, 150), this, IDC_BUTTON1);
-	m_Btn_vpered.ShowWindow(SW_SHOW);
+	//m_Btn_vpered.Create(_T(" -- > ---"), BS_PUSHBUTTON,
+	//	CRect(50, 100, 280, 150), this, IDC_BUTTON1);
+	////m_Btn_vpered.ShowWindow(SW_SHOW);
 
 	m_Edit_info_num_cadr.Create(BS_PUSHBUTTON,
 		CRect(50, 170, 280, 220), this, IDC_BUTTON3);	
-	m_Edit_info_num_cadr.ShowWindow(SW_SHOW);
+	//m_Edit_info_num_cadr.ShowWindow(SW_SHOW);
 	m_Edit_info_num_cadr.SetWindowTextA(_T("cadr"));
 
 
@@ -88,11 +139,11 @@ int CTempoView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		CRect(50, 290, 280, 340), this, IDC_BUTTON4);
 	m_Btn_vpered_jump.ShowWindow(SW_SHOW);
 
-	m_Btn_StartPlay.Create(_T(" <<< Play >>> "), BS_PUSHBUTTON,
+	/*m_Btn_StartPlay.Create(_T(" <<< Play >>> "), BS_PUSHBUTTON,
 		CRect(50, 350, 280, 390), this, IDC_BUTTON7_timer);
-	m_Btn_StartPlay.ShowWindow(SW_SHOW);
+	m_Btn_StartPlay.ShowWindow(SW_SHOW);*/
 
-	
+	return 0;
 
 	return 0;
 
@@ -163,7 +214,7 @@ BOOL CTempoView::PreCreateWindow(CREATESTRUCT& cs)
 void CTempoView::OnDraw(CDC* pDC)
 {
 	
-
+	//return;
 	CTempoDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if(NULL == pDoc || NULL == pDoc->m_pBmi)
@@ -190,15 +241,65 @@ void CTempoView::OnDraw(CDC* pDC)
 	CBrush* pOldBrush = memDC.SelectObject(&m_brush);
 	memDC.PatBlt(0, 0, rectClient.right, rectClient.bottom, PATCOPY);
 
-	const int cx = rectClient.right;				// view client area width;
+	// *******Init graph **********************
+
+	int i, j;
+	double distance;
+	srand(time(0));
+	for (i = 1; i <= N; i++)
+	{
+		v[i].Home.x = Home.x + 20 + rand() % (End.x - Home.x - 50);
+		v[i].Home.y = Home.y + 20 + rand() % (End.y - Home.y - 50);
+		v[i].rct = CRect(CPoint(v[i].Home.x - 10, v[i].Home.y - 10), CSize
+		(25, 25));
+	}
+	//Computing the Maximum Clique 191
+	for (i = 1; i <= N; i++)
+	{
+		e[i][i].adj = 0;
+		for (j = i + 1; j <= N; j++)
+		{
+			distance = sqrt(pow(double(v[i].Home.x - v[j].Home.x), 2)
+				+ pow(double(v[i].Home.y - v[j].Home.y), 2));
+			e[i][j].adj = ((distance <= R) ? 1 : 0);
+			e[j][i].adj = e[i][j].adj;
+		}
+	}
+
+
+
+
+	//************************************
+	CString s;
+	//int i, j;
+	memDC.SelectObject(pColor[0]);
+	for (i = 1; i <= N; i++)
+		for (j = 1; j <= N; j++)
+			if (e[i][j].adj)
+			{
+				memDC.MoveTo(CPoint(v[i].Home));
+				memDC.LineTo(CPoint(v[j].Home));
+			}
+	memDC.SelectObject(fArial); memDC.SelectObject(pColor[1]);
+	for (i = 1; i <= N; i++)
+	{
+		memDC.Rectangle(v[i].rct);
+		s.Format("%d", i);
+		memDC.TextOutA(v[i].Home.x - 5, v[i].Home.y - 5, s);
+	}
+
+	//**************************
+
+	const int cx = (int)(rectClient.right/3);				// view client area width;
 	const int cy = rectClient.bottom;				// view client area height;
-	const int bx = pDoc->m_Mat.cols;				// source bitmap width;
+	const int bx = (int)(pDoc->m_Mat.cols);				// source bitmap width;
 	const int by = pDoc->m_Mat.rows;				// source bitmap height;
 	const int vx = (int)((double)bx * m_dZoomFactor);// virtual document width;
 	const int vy = (int)((double)by * m_dZoomFactor);// virtual document height;
 
 	// source and destination coordinates and sizes
-	int xSrc, ySrc, nSrcWidth, nSrcHeight, xDst, yDst, nDstWidth, nDstHeight;
+	int xSrc, ySrc, nSrcWidth, nSrcHeight, 
+		xDst, yDst, nDstWidth, nDstHeight;
 
 	if(vx > cx)
 	{
@@ -231,10 +332,12 @@ void CTempoView::OnDraw(CDC* pDC)
 	}
 
 	memDC.SetStretchBltMode(COLORONCOLOR);
+	
 	StretchDIBits(memDC.m_hDC, xDst, yDst, nDstWidth, nDstHeight, 
 		xSrc, ySrc, nSrcWidth, nSrcHeight, pDoc->m_Mat.data, pDoc->m_pBmi, DIB_RGB_COLORS, SRCCOPY);
 
-	pDC->BitBlt(0, 0, rectClient.Width(), rectClient.Height(), &memDC, 0, 0, SRCCOPY);
+	pDC->BitBlt(0, 0, rectClient.Width(), rectClient.Height(), &memDC, 0, 0, SRCCOPY); 
+
 	memDC.SelectObject(pOldBitmap);
 	bmpMem.DeleteObject();
 

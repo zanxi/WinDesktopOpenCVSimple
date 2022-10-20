@@ -73,6 +73,7 @@ void CTempoDoc::Serialize(CArchive& ar)
 // Support for thumbnails
 void CTempoDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 {
+	return;
 	// Modify this code to draw the document's data
 	dc.FillSolidRect(lprcBounds, RGB(255, 255, 255));
 
@@ -126,6 +127,7 @@ void CTempoDoc::SetSearchContent(const CString& value)
 
 void CTempoDoc::ResizeMat(cv::Mat& mat)
 {
+	return;
 	int nPadding = 0;
 	if (CV_8UC4 != mat.type()) // padding is not needed for 32bit images
 	{
@@ -148,6 +150,9 @@ void CTempoDoc::ResizeMat(cv::Mat& mat)
  */
 
 
+void CTempoDoc::SetupBitmapInfo2()
+{
+}
 
 void CTempoDoc::SetupBitmapInfo(cv::Mat& mat)
 {
@@ -338,6 +343,7 @@ BOOL CTempoDoc::OnOpenDocument(LPCTSTR lpszPathName)
 // --- < ---
 void CTempoDoc::ShowNextFrameNazad()
 {
+	return;
 
 	//if ((std::string(lpszPathName).find(".dav") != std::string::npos))
 	{
@@ -408,7 +414,7 @@ void CTempoDoc::ShowNextFrameNazad_Jump()
 
 void CTempoDoc::ShowNextFrameVpered()
 {
-
+	return;
 	//if ((std::string(lpszPathName).find(".dav") != std::string::npos))
 	{
 		//return;
@@ -453,6 +459,7 @@ void CTempoDoc::ShowNextFrameVpered()
 void CTempoDoc::ShowNextFrame()
 {
 
+	return;
 		//return;
 		m_Mat = m_VideoDav->cadr(cadrCount);
 

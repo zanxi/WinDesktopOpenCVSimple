@@ -14,6 +14,12 @@ constexpr UINT IDC_BUTTON3{ 1003 };
 
 constexpr UINT IDC_BUTTON7_timer{ 1007 };
 
+#define IDC_NGRAPH 500
+#define IDC_COMPUTE 501
+#define N 20
+#define R 250
+
+
 class CTempoView : public CView
 {
 protected: // create from serialization only
@@ -27,6 +33,27 @@ public:
 // Operations
 public:
 	void ZoomToWindow();
+
+
+private:
+	int vCliq[N + 1], p[N + 1];
+	int max[N + 1];
+	int maxi, maximum, nCliq;
+	CPoint Home, End;
+	CFont fArial, fVerdana;
+	CPen pColor[N + 1];
+	CButton bNGraph, bCompute;
+	typedef struct
+	{
+		int adj;
+	} EDGE;
+	EDGE e[N + 1][N + 1];
+	typedef struct
+	{
+		CPoint Home;
+		CRect rct;
+	} NODE;
+	NODE v[N + 1];
 
 // Overrides
 public:

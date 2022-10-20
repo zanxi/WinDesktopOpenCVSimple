@@ -73,6 +73,7 @@ public:
 protected:
 	void ResizeMat(cv::Mat& mat);
 	void SetupBitmapInfo(cv::Mat& mat);
+	void SetupBitmapInfo2();
 	   
 
 // Generated message map functions
